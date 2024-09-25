@@ -18,15 +18,18 @@ html *
     float: left;
     width: 100%;
     text-align: center;
-    font-size: 16px;
+    font-size: 30px;
+    text-decoration: none;
+    color: white;
 }
 
 .menu-item img {
-    width: 20px; 
-    height: 20px;
+    width: 30px; 
+    height: 30px;
     display: inline;
     vertical-align: baseline;
     margin: 0 0.125em;
+    filter: invert(1);
 }
 
 .page-control { /*chatgpt*/
@@ -39,9 +42,20 @@ html *
     padding: 10px;
     background-color: #3b5998; /* Matches the blue background */
 }
+.page-control button {
+    background-color: darkgray;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 3px;
+    text-align: center;
+}
 
-.button {
-    margin: 0 auto;
+.page-control button:hover {
+    background-color: rgb(150, 150, 150) ;
 }
 
 #app-view {
