@@ -8,7 +8,25 @@ html *
     border-color: grey;
     display: flex;
     justify-content: flex-start;
+
 }
+#app-view {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+#app-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3b5998;
+    padding: 10px;
+    list-style-type: none;
+    margin: 0;
+  }
+
+
 .menu-item {
     width: 100%;
     text-align: center;
@@ -31,16 +49,22 @@ html *
     margin: 0 0.125em;
     filter: invert(1);
 }
-
+.content {
+    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
 .page-control { /*chatgpt*/
     display: flex;
+    margin-top: 20px;
+    justify-content: center;
     align-items: center;
-    justify-items: center;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0); /* Offsets it back by 50% of its own width and height */
-    padding: 10px;
-    background-color: #3b5998; /* Matches the blue background */
+    background-color: #3b4ba3;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
 }
 .page-control button {
     background-color: darkgray;
@@ -57,23 +81,6 @@ html *
 .page-control button:hover {
     background-color: rgb(150, 150, 150) ;
 }
-
-#app-view {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
-}
-
-#app-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #3b5998; /* Blue color for header */
-    padding: 10px;
-    color: white;
-    list-style-type: none;
-    margin: 0;
-  }
 
 .message { /* chatgpt */
     background-color: #f0f0f0; /* Light color for other user's messages */
@@ -121,7 +128,6 @@ html *
     #app-view {
         width: 100%;
     }
-
 }
 
 ul {
