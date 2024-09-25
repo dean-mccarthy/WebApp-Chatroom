@@ -1,0 +1,115 @@
+html *
+{
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+#page-view {
+    border-style: solid;
+    border-width: thin;
+    border-color: grey;
+    display: flex;
+    justify-content: flex-start;
+}
+.menu-item {
+    width: 100%;
+    text-align: center;
+}
+
+.menu-item a {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+}
+
+.menu-item img {
+    width: 20px; 
+    height: 20px;
+    display: inline;
+    vertical-align: baseline;
+    margin: 0 0.125em;
+}
+
+.page-control { /*chatgpt*/
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0); /* Offsets it back by 50% of its own width and height */
+    padding: 10px;
+    background-color: #3b5998; /* Matches the blue background */
+}
+
+.button {
+    margin: 0 auto;
+}
+
+#app-view {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+#app-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3b5998; /* Blue color for header */
+    padding: 10px;
+    color: white;
+    list-style-type: none;
+    margin: 0;
+  }
+
+.message { /* chatgpt */
+    background-color: #f0f0f0; /* Light color for other user's messages */
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    text-align: left;
+    max-width: 60%;
+    clear: both;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.my-message { /* chatgpt */
+    background-color: #007bff; /* Blue color for current user's messages */
+    color: white;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;  
+    text-align: right;
+    max-width: 60%;
+    clear: both;
+    float: right;
+    font-family: Arial, Helvetica, sans-serif;
+} 
+
+.message-user {
+    font-weight: bold;
+}
+ /* resizing rules written by chat-gpt*/
+@media (min-width: 1024px) {
+    #app-view {
+        width: 80%;
+    }
+
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    #app-view {
+        width: 90%;
+    }
+
+}
+
+@media (max-width: 767px) {
+    #app-view {
+        width: 100%;
+    }
+
+}
+
+ul {
+    list-style-type: none;
+}
