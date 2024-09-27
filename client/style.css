@@ -20,12 +20,11 @@ html *
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #3b5998;
+    background-color: #4e424c;
     padding: 10px;
     list-style-type: none;
     margin: 0;
-  }
-
+}
 
 .menu-item {
     width: 100%;
@@ -49,6 +48,18 @@ html *
     margin: 0 0.125em;
     filter: invert(1);
 }
+
+/* Task 6 A */
+#app-menu li:hover{
+    border-radius: 10px;
+    background-color: #3d3532;
+    color: #857d6b;
+}
+
+.room-list li:hover{
+    background-color: blue;
+}
+
 .content {
     margin-top: 10px;
     justify-content: center;
@@ -60,7 +71,7 @@ html *
     margin-top: 20px;
     justify-content: center;
     align-items: center;
-    background-color: #3b4ba3;
+    background-color: #3a3837;
     width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -94,7 +105,7 @@ html *
 }
 
 .my-message { /* chatgpt */
-    background-color: #007bff; /* Blue color for current user's messages */
+    background-color: #585a53; /* Blue color for current user's messages */
     color: white;
     padding: 10px;
     margin: 10px;
