@@ -14,6 +14,8 @@ html *
     display: flex;
     flex-direction: column;
     margin: 0 auto;
+    flex-flow: column;
+    height: 100%;
 }
 
 #app-menu {
@@ -43,8 +45,15 @@ html *
     width: 100%;
     text-align: center;
     font-size: 30px;
-    text-decoration: none;
     color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    color: inherit;
 }
 
 .menu-item img {
@@ -53,29 +62,49 @@ html *
     display: inline;
     vertical-align: baseline;
     margin: 0 0.125em;
-    filter: invert(1);
+}
+
+.room-list img {
+    border-radius: 50%;
+    width: 50px; 
+    height: 50px;
+    display: inline;
+    vertical-align: middle;
+    margin-right: 20px;
 }
 
 /* Task 6 B */
 .room-list li:hover{
-    background-color: blue;
+    background-color: grey;
+    cursor: pointer;
+}
+.room-list {
+    vertical-align: middle;
+}
+
+.room-list li {
+    margin-right: 40px;
+    border-color: grey;
+    border-width: 2px;
+    border-style: solid;
+    margin-bottom: -2px;
+    margin-top: -2px;
 }
 
 .content {
-    margin-top: 10px;
     justify-content: center;
     align-items: center;
     width: 100%;
 }
 .page-control { /*chatgpt*/
     display: flex;
-    margin-top: 20px;
     justify-content: center;
     align-items: center;
     background-color: #3a3837;
     width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
+    bottom: 0;
 
 }
 .page-control button {
@@ -92,6 +121,14 @@ html *
 
 .page-control button:hover {
     background-color: rgb(150, 150, 150) ;
+}
+
+.page-control input[type=text] {
+    height: 25px;
+}
+
+.room-name {
+    margin-left: 20px;
 }
 
 .message { /* chatgpt */
@@ -121,6 +158,31 @@ html *
 .message-user {
     font-weight: bold;
 }
+
+
+
+.form-field {
+    border: 1px solid grey;
+    padding: 20px;
+    margin: -1px;
+}
+
+.form-field input[type=file] {
+    margin-left: 45px;
+}
+
+input [type=text] {
+    resize: none;
+    padding: 10px 10px;
+    margin: 4px 0px;
+    box-sizing: border-box;
+}
+
+textarea {
+    width: 90%;
+}
+
+
  /* resizing rules written by chat-gpt*/
 @media (min-width: 1024px) {
     #app-view {
