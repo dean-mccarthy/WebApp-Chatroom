@@ -26,6 +26,13 @@ html *
     margin: 0;
 }
 
+/* Task 6 A */
+#app-menu li:hover{
+    border-radius: 10px;
+    background-color: #3d3532;
+    color: #857d6b;
+}
+
 .menu-item {
     width: 100%;
     text-align: center;
@@ -49,13 +56,7 @@ html *
     filter: invert(1);
 }
 
-/* Task 6 A */
-#app-menu li:hover{
-    border-radius: 10px;
-    background-color: #3d3532;
-    color: #857d6b;
-}
-
+/* Task 6 B */
 .room-list li:hover{
     background-color: blue;
 }
