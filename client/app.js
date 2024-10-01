@@ -40,6 +40,7 @@ function main() {
     }
 
     renderRoute();
+    window.addEventListener('popstate', renderRoute);
 }
 
 window.addEventListener('load', main);
