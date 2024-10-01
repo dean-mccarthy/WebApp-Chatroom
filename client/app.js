@@ -41,6 +41,13 @@ function main() {
 
     renderRoute();
     window.addEventListener('popstate', renderRoute);
-}
+    
+    cpen322.export(arguments.callee, {
+        renderRoute: renderRoute,
+        // lobbyView: lobbyView
+    });
+}    
+
+
 
 window.addEventListener('load', main);
