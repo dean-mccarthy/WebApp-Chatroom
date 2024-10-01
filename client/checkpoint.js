@@ -29,13 +29,17 @@ function main() {
 
         if (url == "#/") {
             
+            console.log("page-view");
+            console.log(pageView);
+
+            console.log("content");
             var content = document.getElementsByClassName("content")[0];
+            console.log(content);
             
             emptyDOM(pageView);
             pageView.appendChild(content);
             
         }
-
     }
 
     window.addEventListener('popstate', renderRoute);
