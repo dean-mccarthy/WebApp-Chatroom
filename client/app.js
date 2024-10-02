@@ -1,50 +1,58 @@
 class LobbyView {
-	constructor() {
-	  this.elem = createDOM(`
-		<div class="content">
-		  <ul class="room-list">
-			<li>
-			  <a href="#/chat"><img src="assets/everyone-icon.png"/>Everyone in CPEN320</a>
-			</li>
-			<li>
-			  <a href="#/chat"><img src="assets/bibimbap.jpg"/>SCRANNNN</a>
-			</li>
-			<li>
-			  <a href="#/chat"><img src="assets/minecraft.jpg"/>Fortnite Battle Royale</a>
-			</li>
-			<li>
-			  <a href="#/chat"><img src="assets/canucks.png"/>No wins</a>
-			</li>
-		  </ul>
-		  <div class="page-control">
-			<input type="text" placeholder="Room Name"></input> <button type="button">Create new room</button>
-		  </div>
-		</div>
-	  `);
+	constructor() { // TODO: Change <a> to be the whole box after we get assn1 evalutated
+		this.elem = createDOM(`
+			<div class="content">
+				<ul class="room-list">
+					<li>
+						<a href="#/chat"><img src="assets/everyone-icon.png"/>Everyone in CPEN320</a>
+					</li>
+					<li>
+						<a href="#/chat"><img src="assets/bibimbap.jpg"/>SCRANNNN</a>
+					</li>
+					<li>
+						<a href="#/chat"><img src="assets/minecraft.jpg"/>Fortnite Battle Royale</a>
+					</li>
+					<li>
+						<a href="#/chat"><img src="assets/canucks.png"/>No wins</a>
+					</li>
+				</ul>
+				<div class="page-control">
+					<input type="text" placeholder="Room Name"></input> <button type="button">Create new room</button>
+				</div>
+			</div>
+		`);
+		this.listElem = this.elem.querySelector('ul.room-list');
+		this.inputElem = this.elem.querySelector('input');
+		this.buttonElem = this.elem.querySelector('button');
+		
 	}
   }
   
   class ChatView {
 	constructor() {
-	  this.elem = createDOM(`
-		<div class="content">
-          <h4 class="room-name">Room Name</h4>
-          <div class="message-list">
-            <div class="message">
-              <span class="message-user">User</span>
-              <span class="message-text">Message</span>
-            </div>
-            <div class="message my-message">
-              <span class="message-user">Me</span>
-              <span class="message-text">Message</span>
-            </div>
+		this.elem = createDOM(`
+			<div class="content">
+				<h4 class="room-name">Room Name</h4>
+				<div class="message-list">
+					<div class="message">
+						<span class="message-user">User</span>
+						<span class="message-text">Message</span>
+					</div>
+					<div class="message my-message">
+						<span class="message-user">Me</span>
+						<span class="message-text">Message</span>
+					</div>
 
-          </div>
-          <div class="page-control">
-            <textarea type="textarea" placeholder="Type your message here"></textarea> <button type="button">Send</button>
-          </div>
-        </div>
-		`);
+				</div>
+				<div class="page-control">
+					<textarea type="textarea" placeholder="Type your message here"></textarea> <button type="button">Send</button>
+				</div>
+			</div>
+			`);
+		this.titleElem = this.elem.querySelector('h4.room-name');
+		this.chatElem = this.elem.querySelector('div.message-list');
+		this.inputElem = this.elem.querySelector('textarea');
+		this.buttonElem = this.elem.querySelector('button');
 	}
   }
   class ProfileView {
