@@ -22,26 +22,51 @@ function main() {
         console.log(template.content.firstChild);
         return template.content.firstChild;
     }
+    
+    //****THIS IS PROBABLY GARBAGE */
+    class LobbyView {
+        constructor() {
+          this.elem = createDOM(`<div class="content">
+            <ul class="room-list">
+              <li>
+                <a href="#/chat"><img src="assets/everyone-icon.png"/>Everyone in CPEN320</a>
+              </li>
+              <li>
+                <a href="#/chat"><img src="assets/bibimbap.jpg"/>SCRANNNN</a>
+              </li>
+              <li>
+                <a href="#/chat"><img src="assets/minecraft.jpg"/>Fortnite Battle Royale</a>
+              </li>
+              <li>
+                <a href="#/chat"><img src="assets/canucks.png"/>No wins</a>
+              </li>
+            </ul>
+            <div class="page-control">
+              <input type="text" placeholder="Room Name"></input> <button type="button">Create new room</button>
+            </div>
+          </div>`);
+        }
 
-    // ********************
+    }
+    console.log("lobby view");
+    var lobbyView = new LobbyView();
+    console.log(lobbyView);
+
+    // ***********END GARBAGE *********
 
     function renderRoute() {
+
         var url = window.location.hash;
         console.log("current url: " + url);
 
         var pageView = document.getElementById('page-view');
-       
-        console.log("indexContent");
-        console.log(indexContent);
-        console.log("profileContent");
-        console.log(profileContent);
 
         if (url == "#/") {
             console.log("indexContent");
             console.log(indexContent);
             emptyDOM(pageView);
             pageView.appendChild(indexContent);
-            
+
         }
 
         else if (url == "#/profile") {
@@ -49,7 +74,7 @@ function main() {
             console.log(profileContent);
             emptyDOM(pageView);
             pageView.appendChild(profileContent);
-            
+
         }
 
         else if (url == "#/chat/room-1") {
@@ -57,19 +82,19 @@ function main() {
             console.log(chatContent);
             emptyDOM(pageView);
             pageView.appendChild(chatContent);
-            
+
         }
 
     }
 
     window.addEventListener('popstate', renderRoute);
     window.addEventListener('hashchange', renderRoute);
-    
+
     cpen322.export(arguments.callee, {
         renderRoute: renderRoute,
-        // lobbyView: lobbyView
+        lobbyView: lobbyView
     });
-}    
+}
 
 
 
