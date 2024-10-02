@@ -1,5 +1,9 @@
 function main() {
     console.log("page is fully loaded");
+    const indexContent = document.getElementsByClassName("content")[0];
+    const profileContent = document.getElementsByClassName("content")[1];
+    const chatContent = document.getElementsByClassName("content")[2];
+
     renderRoute();
 
     // HELPER FUNCTIONS 
@@ -26,13 +30,33 @@ function main() {
         console.log("current url: " + url);
 
         var pageView = document.getElementById('page-view');
+       
+        console.log("indexContent");
+        console.log(indexContent);
+        console.log("profileContent");
+        console.log(profileContent);
 
         if (url == "#/") {
-            
-            var content = document.getElementsByClassName("content")[0];
-            
+            console.log("indexContent");
+            console.log(indexContent);
             emptyDOM(pageView);
-            pageView.appendChild(content);
+            pageView.appendChild(indexContent);
+            
+        }
+
+        else if (url == "#/profile") {
+            console.log("profileContent");
+            console.log(profileContent);
+            emptyDOM(pageView);
+            pageView.appendChild(profileContent);
+            
+        }
+
+        else if (url == "#/chat") {
+            console.log("chatContent");
+            console.log(chatContent);
+            emptyDOM(pageView);
+            pageView.appendChild(chatContent);
             
         }
 
