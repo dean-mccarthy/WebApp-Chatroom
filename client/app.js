@@ -1,87 +1,127 @@
+class LobbyView {
+	constructor() {
+	  this.elem = createDOM(`
+		<div class="content">
+		  <ul class="room-list">
+			<li>
+			  <a href="#/chat"><img src="assets/everyone-icon.png"/>Everyone in CPEN320</a>
+			</li>
+			<li>
+			  <a href="#/chat"><img src="assets/bibimbap.jpg"/>SCRANNNN</a>
+			</li>
+			<li>
+			  <a href="#/chat"><img src="assets/minecraft.jpg"/>Fortnite Battle Royale</a>
+			</li>
+			<li>
+			  <a href="#/chat"><img src="assets/canucks.png"/>No wins</a>
+			</li>
+		  </ul>
+		  <div class="page-control">
+			<input type="text" placeholder="Room Name"></input> <button type="button">Create new room</button>
+		  </div>
+		</div>
+	  `);
+	}
+  }
+  
+  class ChatView {
+	constructor() {
+	  this.elem = createDOM(`
+		<div class="content">
+          <h4 class="room-name">Room Name</h4>
+          <div class="message-list">
+            <div class="message">
+              <span class="message-user">User</span>
+              <span class="message-text">Message</span>
+            </div>
+            <div class="message my-message">
+              <span class="message-user">Me</span>
+              <span class="message-text">Message</span>
+            </div>
+
+          </div>
+          <div class="page-control">
+            <textarea type="textarea" placeholder="Type your message here"></textarea> <button type="button">Send</button>
+          </div>
+        </div>
+		`);
+	}
+  }
+  class ProfileView {
+	constructor() {
+	  this.elem = createDOM(`
+		<div class="content">
+			<div class="profile-form">
+				<div class="form-field">
+					<label>Username: </label><input type="text" style="margin-left: 17px;""></input>
+				</div>
+				<div class="form-field">
+					<label>Password: </label><input type="password" style="margin-left: 20px;"></input>
+				</div>
+				<div class="form-field">
+					<label>Avatar: </label><input type="file"></input>
+				</div>
+			</div>
+			<div class="page-control">
+				<button type="button">Save Changes</button>
+			</div>
+		</div>
+		`);
+	}
+  }
+
+// Helper Functions
+
+// Removes the contents of the given DOM element (equivalent to elem.innerHTML = '' but faster)
+function emptyDOM(elem) {
+	while (elem.firstChild) elem.removeChild(elem.firstChild);
+}
+
+// Creates a DOM element from the given HTML string
+function createDOM(htmlString) {
+	console.log("createDOM");
+	console.log(htmlString);
+	let template = document.createElement('template');
+	template.innerHTML = htmlString.trim();
+	console.log(template.content.firstChild);
+	return template.content.firstChild;
+}
+
 function main() {
     console.log("page is fully loaded");
-    const indexContent = document.getElementsByClassName("content")[0];
-    const profileContent = document.getElementsByClassName("content")[1];
-    const chatContent = document.getElementsByClassName("content")[2];
+	const lobbyView = new LobbyView();
+	const chatView = new ChatView();
+	const profileView = new ProfileView();
 
     renderRoute();
 
-    // HELPER FUNCTIONS 
-
-    // Removes the contents of the given DOM element (equivalent to elem.innerHTML = '' but faster)
-    function emptyDOM(elem) {
-        while (elem.firstChild) elem.removeChild(elem.firstChild);
-    }
-
-    // Creates a DOM element from the given HTML string
-    function createDOM(htmlString) {
-        console.log("createDOM");
-        console.log(htmlString);
-        let template = document.createElement('template');
-        template.innerHTML = htmlString.trim();
-        console.log(template.content.firstChild);
-        return template.content.firstChild;
-    }
-    
-    //****THIS IS PROBABLY GARBAGE */
-    class LobbyView {
-        constructor() {
-          this.elem = createDOM(`<div class="content">
-            <ul class="room-list">
-              <li>
-                <a href="#/chat"><img src="assets/everyone-icon.png"/>Everyone in CPEN320</a>
-              </li>
-              <li>
-                <a href="#/chat"><img src="assets/bibimbap.jpg"/>SCRANNNN</a>
-              </li>
-              <li>
-                <a href="#/chat"><img src="assets/minecraft.jpg"/>Fortnite Battle Royale</a>
-              </li>
-              <li>
-                <a href="#/chat"><img src="assets/canucks.png"/>No wins</a>
-              </li>
-            </ul>
-            <div class="page-control">
-              <input type="text" placeholder="Room Name"></input> <button type="button">Create new room</button>
-            </div>
-          </div>`);
-        }
-
-    }
-    console.log("lobby view");
-    var lobbyView = new LobbyView();
-    console.log(lobbyView);
-
-    // ***********END GARBAGE *********
-
     function renderRoute() {
 
-        var url = window.location.hash;
-        console.log("current url: " + url);
+		const path = window.location.hash.substring(2);
+        const url = path.split('/')[0];
+        const pageView = document.getElementById('page-view');
 
-        var pageView = document.getElementById('page-view');
-
-        if (url == "#/") {
+        if (url == "") {
             console.log("indexContent");
-            console.log(indexContent);
+            //console.log(indexContent);
             emptyDOM(pageView);
-            pageView.appendChild(indexContent);
+            pageView.appendChild(lobbyView.elem);
 
         }
 
-        else if (url == "#/profile") {
+        else if (url == "profile") {
             console.log("profileContent");
-            console.log(profileContent);
+            //console.log(profileContent);
             emptyDOM(pageView);
-            pageView.appendChild(profileContent);
+            pageView.appendChild(profileView.elem);
 
         }
 
-        else if (url == "#/chat/room-1") {
+        else if (url == "chat") {
             console.log("chatContent");
-            console.log(chatContent);
+            //console.log(chatContent);
             emptyDOM(pageView);
-            pageView.appendChild(chatContent);
+            pageView.appendChild(chatView.elem);
 
         }
 
@@ -92,10 +132,11 @@ function main() {
 
     cpen322.export(arguments.callee, {
         renderRoute: renderRoute,
-        lobbyView: lobbyView
+        lobbyView: lobbyView,
+		chatView: chatView,
+		profileView: profileView
     });
 }
-
 
 
 window.addEventListener('load', main);
