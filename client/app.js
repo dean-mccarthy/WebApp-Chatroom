@@ -52,7 +52,7 @@ function main() {
             
         }
 
-        else if (url == "#/chat") {
+        else if (url == "#/chat/room-1") {
             console.log("chatContent");
             console.log(chatContent);
             emptyDOM(pageView);
