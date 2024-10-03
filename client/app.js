@@ -2,7 +2,7 @@
 
 class LobbyView {
   constructor(lobby) { // TODO: Change <a> to be the whole box after we get assn1 evalutated
-	  this.lobby = lobby;
+	this.lobby = lobby;
     this.elem = createDOM(`
 			<div class="content">
 				<ul class="room-list">
@@ -28,18 +28,23 @@ class LobbyView {
     this.inputElem = this.elem.querySelector('input');
     this.buttonElem = this.elem.querySelector('button');
 
+	this.lobby.onNewRoom = (room) => {
+		const roomItem = createDOM(`<li><a href="#/chat/${room.id}"><img src="${room.image}"/>${room.name}</a></li>`);
+		this.listElem.appendChild(roomItem);
+	}
+
     this.redrawList(); //draw initial room list
+
+
 
     this.buttonElem.addEventListener('click', () => {
 
 		const roomName = this.inputElem.value.trim();
 		console.log("button clicked");
 		if (roomName !== '') {
-
-			const roomId = Object.keys(this.lobby.rooms).length + 1;
         
 			console.log("room name:", roomName);
-			this.lobby.addRoom(roomId, roomName);
+			this.lobby.addRoom(roomName, roomName);
 			this.inputElem.value = '';
       }
     });
@@ -149,12 +154,16 @@ class Lobby {
   addRoom(id, name, image = "assets/everyone-icon.png", messages = []) {
     if (this.getRoom(id)) {
       console.log("Could not create room: Room with this ID already exists");
-      return;
     }
     else {
-      this.rooms[id] = new Room(id, name, image, messages);
-      return;
+		const newRoom = new Room(id, name, image, messages);
+		this.rooms[id] = newRoom;
+		if (typeof this.onNewRoom  === 'function') {
+			this.onNewRoom(newRoom);
+		}
     }
+
+	
   }
 }
 
