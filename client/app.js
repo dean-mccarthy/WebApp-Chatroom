@@ -54,11 +54,11 @@ class Room {
 class Lobby {
   constructor() {
     console.log("Creating New Lobby");
-    this.rooms = [];
-    this.rooms.push(new Room(1, `Room 1`));
-    this.rooms.push(new Room(2, `Room 2`));
-    this.rooms.push(new Room(3, `Room 3`));
-    this.rooms.push(new Room(4, `Room 4`));
+    this.rooms = {};
+    this.rooms[1] = new Room(1, `Room 1`);
+    this.rooms[2] = new Room(2, `Room 2`);
+    this.rooms[3] = new Room(3, `Room 3`);
+    this.rooms[4] = new Room(4, `Room 4`);
     };
 
   getRoom(roomId) {
@@ -79,7 +79,7 @@ class Lobby {
       return;
     }
     else {
-      this.rooms.push(new Room(id, name, image, messages));
+      this.rooms[id] = new Room(id, name, image, messages);
       console.log("Rooms after: ");
       console.log(this.rooms);
       console.log("# of rooms: " + this.rooms.length);
