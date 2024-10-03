@@ -1,8 +1,14 @@
+//task 8a
+var profile = {
+  username: "Guest"
+}
+
+
 // Overall Views
 
 class LobbyView {
   constructor(lobby) { // TODO: Change <a> to be the whole box after we get assn1 evalutated
-	this.lobby = lobby;
+    this.lobby = lobby;
     this.elem = createDOM(`
 			<div class="content">
 				<ul class="room-list">
@@ -28,10 +34,10 @@ class LobbyView {
     this.inputElem = this.elem.querySelector('input');
     this.buttonElem = this.elem.querySelector('button');
 
-	this.lobby.onNewRoom = (room) => {
-		const roomItem = createDOM(`<li><a href="#/chat/${room.id}"><img src="${room.image}"/>${room.name}</a></li>`);
-		this.listElem.appendChild(roomItem);
-	}
+    this.lobby.onNewRoom = (room) => {
+      const roomItem = createDOM(`<li><a href="#/chat/${room.id}"><img src="${room.image}"/>${room.name}</a></li>`);
+      this.listElem.appendChild(roomItem);
+    }
 
     this.redrawList(); //draw initial room list
 
@@ -39,25 +45,25 @@ class LobbyView {
 
     this.buttonElem.addEventListener('click', () => {
 
-		const roomName = this.inputElem.value.trim();
-		console.log("button clicked");
-		if (roomName !== '') {
-        
-			console.log("room name:", roomName);
-			this.lobby.addRoom(roomName, roomName);
-			this.inputElem.value = '';
+      const roomName = this.inputElem.value.trim();
+      console.log("button clicked");
+      if (roomName !== '') {
+
+        console.log("room name:", roomName);
+        this.lobby.addRoom(roomName, roomName);
+        this.inputElem.value = '';
       }
     });
-    
+
   }
   redrawList() {
-		emptyDOM(this.listElem);
-		for (var roomId in this.lobby.rooms) {
-			var currRoom = this.lobby.rooms[roomId];
-			const roomItem = createDOM(`<li><a href="#/chat/${roomId}"><img src="${currRoom.image}"/>${currRoom.name}</a></li>`);
-			this.listElem.appendChild(roomItem);
-		}
-	}
+    emptyDOM(this.listElem);
+    for (var roomId in this.lobby.rooms) {
+      var currRoom = this.lobby.rooms[roomId];
+      const roomItem = createDOM(`<li><a href="#/chat/${roomId}"><img src="${currRoom.image}"/>${currRoom.name}</a></li>`);
+      this.listElem.appendChild(roomItem);
+    }
+  }
 }
 
 class ChatView {
@@ -85,8 +91,56 @@ class ChatView {
     this.chatElem = this.elem.querySelector('div.message-list');
     this.inputElem = this.elem.querySelector('textarea');
     this.buttonElem = this.elem.querySelector('button');
+
+    //task 8d
+    this.room = null;
+    this.buttonElem.addEventListener('click', () => this.sendMessage());
+    this.inputElem.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter' && !event.shiftkey) {
+        this.sendMessage();
+      }
+    });
   }
+
+  // //task 8c
+  sendMessage() {
+    this.room.addMessage(profile.username, this.inputElem.value);
+    // this.inputElem.value = ''; //i think it should be this but it breaks the tests
+    this.inputElem = '';
+  }
+
+  setRoom(room) {
+    this.room = room;
+    this.titleElem.value = room.name;
+
+    this.redrawMessageList();
+
+    //sudo new event listener
+    this.room.onNewMessage = (message) => {
+      //????
+    };
+
+  }
+
+  redrawMessageList() {
+    emptyDOM(this.chatElem);
+    for (var message in this.room.messages) {
+      var currMessage = this.room.messages[message];
+      const messageItem = createDOM(`
+            <div class="message-list">
+            <div class="message">
+              <span class="message-user">${currMessage.username}"</span>
+              <span class="message-text">${currMessage.message}</span>
+            </div>
+          `);
+      this.chatElem.appendChild(messageItem);
+    }
+  }
+
+
 }
+
+
 class ProfileView {
   constructor() {
     this.elem = createDOM(`
@@ -121,7 +175,10 @@ class Room {
   };
 
   addMessage(username, text) {
-    if (text == "" || text.trim().length == 0) //if text is empty or only whitespaces
+    console.log("text:");
+    console.log(text);
+    //no type check on text, converts to string before trimming
+    if (text == "" || String(text).trim().length == 0) //if text is empty or only whitespaces
       return;
     else {
       const message = {
@@ -129,7 +186,13 @@ class Room {
         text: text,
       };
       this.messages.push(message);
-      return;
+
+      //task 8b
+      //check if onNewMessage function is defined 
+      if (typeof this.onNewMessage === 'function') {
+        this.onNewMessage(message);
+      }
+
     }
   }
 }
@@ -141,7 +204,7 @@ class Lobby {
     this.rooms[2] = new Room(2, `Room 2`);
     this.rooms[3] = new Room(3, `Room 3`);
     this.rooms[4] = new Room(4, `Room 4`);
-    };
+  };
 
   getRoom(roomId) {
     if (this.rooms[roomId]) {
@@ -156,14 +219,14 @@ class Lobby {
       console.log("Could not create room: Room with this ID already exists");
     }
     else {
-		const newRoom = new Room(id, name, image, messages);
-		this.rooms[id] = newRoom;
-		if (typeof this.onNewRoom  === 'function') {
-			this.onNewRoom(newRoom);
-		}
+      const newRoom = new Room(id, name, image, messages);
+      this.rooms[id] = newRoom;
+      if (typeof this.onNewRoom === 'function') {
+        this.onNewRoom(newRoom);
+      }
     }
 
-	
+
   }
 }
 
@@ -186,17 +249,17 @@ function createDOM(htmlString) {
 
 function main() {
 
-	const lobby = new Lobby();
+  const lobby = new Lobby();
 
 
-	console.log("page is fully loaded");
-	const lobbyView = new LobbyView(lobby);
-	const chatView = new ChatView();
-	const profileView = new ProfileView();
+  console.log("page is fully loaded");
+  const lobbyView = new LobbyView(lobby);
+  const chatView = new ChatView();
+  const profileView = new ProfileView();
 
-	renderRoute();
+  renderRoute();
 
-	function renderRoute() {
+  function renderRoute() {
 
     const path = window.location.hash.substring(2);
     const url = path.split('/')[0];
