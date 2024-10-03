@@ -24,8 +24,30 @@ class LobbyView {
 		this.listElem = this.elem.querySelector('ul.room-list');
 		this.inputElem = this.elem.querySelector('input');
 		this.buttonElem = this.elem.querySelector('button');
-		
 	}
+}
+
+
+  class Room {
+    constructor(id, name, image = "assets/everyone-icon.png", messages = []) { 
+      this.id = id;
+      this.name = name;
+      this.image = image;
+      this.messages = messages;
+    };      
+    
+    addMessage(username, text){
+      if (text == "" || text.trim().length == 0) //if text is empty or only whitespaces
+        return;
+      else {
+        const message = {
+          username: username,
+          text: text,
+        };
+        this.messages.push(message);
+        return;
+      }
+    }
   }
   
   class ChatView {
