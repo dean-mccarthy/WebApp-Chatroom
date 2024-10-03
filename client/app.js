@@ -1,7 +1,8 @@
 // Overall Views
 
 class LobbyView {
-  constructor() { // TODO: Change <a> to be the whole box after we get assn1 evalutated
+  constructor(lobby) { // TODO: Change <a> to be the whole box after we get assn1 evalutated
+	  this.lobby = lobby;
     this.elem = createDOM(`
 			<div class="content">
 				<ul class="room-list">
@@ -26,7 +27,32 @@ class LobbyView {
     this.listElem = this.elem.querySelector('ul.room-list');
     this.inputElem = this.elem.querySelector('input');
     this.buttonElem = this.elem.querySelector('button');
+
+    this.redrawList(); //draw initial room list
+
+    this.buttonElem.addEventListener('click', () => {
+
+		const roomName = this.inputElem.value.trim();
+		console.log("button clicked");
+		if (roomName !== '') {
+
+			const roomId = Object.keys(this.lobby.rooms).length + 1;
+        
+			console.log("room name:", roomName);
+			this.lobby.addRoom(roomId, roomName);
+			this.inputElem.value = '';
+      }
+    });
+    
   }
+  redrawList() {
+		emptyDOM(this.listElem);
+		for (var roomId in this.lobby.rooms) {
+			var currRoom = this.lobby.rooms[roomId];
+			const roomItem = createDOM(`<li><a href="#/chat/${roomId}"><img src="${currRoom.image}"/>${currRoom.name}</a></li>`);
+			this.listElem.appendChild(roomItem);
+		}
+	}
 }
 
 class ChatView {
@@ -120,7 +146,7 @@ class Lobby {
       return null;
   }
 
-  addRoom(id, name, image, messages) {
+  addRoom(id, name, image = "assets/everyone-icon.png", messages = []) {
     if (this.getRoom(id)) {
       console.log("Could not create room: Room with this ID already exists");
       return;
@@ -142,22 +168,26 @@ function emptyDOM(elem) {
 // Creates a DOM element from the given HTML string
 function createDOM(htmlString) {
   console.log("createDOM");
-  console.log(htmlString);
+  //console.log(htmlString);
   let template = document.createElement('template');
   template.innerHTML = htmlString.trim();
-  console.log(template.content.firstChild);
+  //console.log(template.content.firstChild);
   return template.content.firstChild;
 }
 
 function main() {
-  console.log("page is fully loaded");
-  const lobbyView = new LobbyView();
-  const chatView = new ChatView();
-  const profileView = new ProfileView();
 
-  renderRoute();
+	const lobby = new Lobby();
 
-  function renderRoute() {
+
+	console.log("page is fully loaded");
+	const lobbyView = new LobbyView(lobby);
+	const chatView = new ChatView();
+	const profileView = new ProfileView();
+
+	renderRoute();
+
+	function renderRoute() {
 
     const path = window.location.hash.substring(2);
     const url = path.split('/')[0];
@@ -196,7 +226,8 @@ function main() {
     renderRoute: renderRoute,
     lobbyView: lobbyView,
     chatView: chatView,
-    profileView: profileView
+    profileView: profileView,
+    lobby: lobby
   });
 }
 
