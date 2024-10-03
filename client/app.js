@@ -1,3 +1,5 @@
+// Overall Views
+
 class LobbyView {
   constructor() { // TODO: Change <a> to be the whole box after we get assn1 evalutated
     this.elem = createDOM(`
@@ -24,67 +26,6 @@ class LobbyView {
     this.listElem = this.elem.querySelector('ul.room-list');
     this.inputElem = this.elem.querySelector('input');
     this.buttonElem = this.elem.querySelector('button');
-  }
-}
-
-
-class Room {
-  constructor(id, name, image = "assets/everyone-icon.png", messages = []) {
-    this.id = id;
-    this.name = name;
-    this.image = image;
-    this.messages = messages;
-    console.log("Creating New room with id:" + id);
-  };
-
-  addMessage(username, text) {
-    if (text == "" || text.trim().length == 0) //if text is empty or only whitespaces
-      return;
-    else {
-      const message = {
-        username: username,
-        text: text,
-      };
-      this.messages.push(message);
-      return;
-    }
-  }
-}
-
-class Lobby {
-  constructor() {
-    console.log("Creating New Lobby");
-    this.rooms = {};
-    this.rooms[1] = new Room(1, `Room 1`);
-    this.rooms[2] = new Room(2, `Room 2`);
-    this.rooms[3] = new Room(3, `Room 3`);
-    this.rooms[4] = new Room(4, `Room 4`);
-    };
-
-  getRoom(roomId) {
-    if (this.rooms[roomId]) {
-      return this.rooms[roomId];
-    }
-    else
-      return null;
-  }
-
-  //broken. not adding a room correctly.
-  addRoom(id, name, image, messages) {
-    console.log("Rooms before: ");
-    console.log(this.rooms);
-    console.log("# of rooms: " + this.rooms.length);
-    if (this.getRoom(id)) {
-      console.log("Could not create room: Room with this ID already exists");
-      return;
-    }
-    else {
-      this.rooms[id] = new Room(id, name, image, messages);
-      console.log("Rooms after: ");
-      console.log(this.rooms);
-      console.log("# of rooms: " + this.rooms.length);
-      return;
-    }
   }
 }
 
@@ -135,6 +76,59 @@ class ProfileView {
 			</div>
 		</div>
 		`);
+  }
+}
+
+// Additional Classes
+
+class Room {
+  constructor(id, name, image = "assets/everyone-icon.png", messages = []) {
+    this.id = id;
+    this.name = name;
+    this.image = image;
+    this.messages = messages;
+  };
+
+  addMessage(username, text) {
+    if (text == "" || text.trim().length == 0) //if text is empty or only whitespaces
+      return;
+    else {
+      const message = {
+        username: username,
+        text: text,
+      };
+      this.messages.push(message);
+      return;
+    }
+  }
+}
+
+class Lobby {
+  constructor() {
+    this.rooms = {};
+    this.rooms[1] = new Room(1, `Room 1`);
+    this.rooms[2] = new Room(2, `Room 2`);
+    this.rooms[3] = new Room(3, `Room 3`);
+    this.rooms[4] = new Room(4, `Room 4`);
+    };
+
+  getRoom(roomId) {
+    if (this.rooms[roomId]) {
+      return this.rooms[roomId];
+    }
+    else
+      return null;
+  }
+
+  addRoom(id, name, image, messages) {
+    if (this.getRoom(id)) {
+      console.log("Could not create room: Room with this ID already exists");
+      return;
+    }
+    else {
+      this.rooms[id] = new Room(id, name, image, messages);
+      return;
+    }
   }
 }
 
