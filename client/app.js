@@ -1,7 +1,7 @@
 //task 8a
 var profile = {
   username: "Guest"
-}
+};
 
 
 // Overall Views
@@ -50,7 +50,7 @@ class LobbyView {
       if (roomName !== '') {
 
         console.log("room name:", roomName);
-        this.lobby.addRoom(roomName, roomName);
+        this.lobby.addRoom(roomName.replaceAll(' ', '-'), roomName);
         this.inputElem.value = '';
       }
     });
@@ -96,7 +96,7 @@ class ChatView {
     this.room = null;
     this.buttonElem.addEventListener('click', () => this.sendMessage());
     this.inputElem.addEventListener('keyup', (event) => {
-      if (event.key === 'Enter' && !event.shiftkey) {
+      if (event.key == 'Enter' && !event.shiftKey) {
         this.sendMessage();
       }
     });
@@ -104,20 +104,26 @@ class ChatView {
 
   // //task 8c
   sendMessage() {
-    this.room.addMessage(profile.username, this.inputElem.value);
-    // this.inputElem.value = ''; //i think it should be this but it breaks the tests
-    this.inputElem = '';
+    console.log("button clicked");
+    const text = this.inputElem.value;
+    //console.log(text);
+    if (text !== '') {
+      this.room.addMessage(profile.username, text);
+      // this.inputElem.value = ''; //i think it should be this but it breaks the tests
+      this.inputElem.value = '';
+    }
+
   }
 
   setRoom(room) {
     this.room = room;
-    this.titleElem.value = room.name;
+    this.titleElem.innerHTML = room.name;
 
     this.redrawMessageList();
 
     //sudo new event listener
     this.room.onNewMessage = (message) => {
-      //????
+      this.makeMessage(message)
     };
 
   }
@@ -126,18 +132,34 @@ class ChatView {
     emptyDOM(this.chatElem);
     for (var message in this.room.messages) {
       var currMessage = this.room.messages[message];
-      const messageItem = createDOM(`
-            <div class="message-list">
-            <div class="message">
-              <span class="message-user">${currMessage.username}"</span>
-              <span class="message-text">${currMessage.message}</span>
-            </div>
-          `);
-      this.chatElem.appendChild(messageItem);
+      this.makeMessage(currMessage);
     }
   }
 
 
+
+  makeMessage(message) {
+    
+    if (message.username == profile.username) {
+      console.log('making my-mess');
+      const messageItem = createDOM(`
+        <div class="message my-message">
+          <span class="message-user">${message.username}</span>
+          <span class="message-text">${message.text}</span>
+        </div>
+      `);
+      this.chatElem.appendChild(messageItem);
+    } else {
+      console.log('making other-mess');
+      const messageItem = createDOM(`
+        <div class="message">
+          <span class="message-user">${message.username}</span>
+          <span class="message-text">${message.text}</span>
+        </div>
+      `);
+      this.chatElem.appendChild(messageItem);
+    }
+  }
 }
 
 
@@ -200,10 +222,10 @@ class Room {
 class Lobby {
   constructor() {
     this.rooms = {};
-    this.rooms[1] = new Room(1, `Room 1`);
-    this.rooms[2] = new Room(2, `Room 2`);
-    this.rooms[3] = new Room(3, `Room 3`);
-    this.rooms[4] = new Room(4, `Room 4`);
+    this.rooms['room-1'] = new Room('room-1', `Room 1`);
+    this.rooms['room-2'] = new Room('room-2', `Room 2`);
+    this.rooms['room-3'] = new Room('room-3', `Room 3`);
+    this.rooms['room-4'] = new Room('room-4', `Room 4`);
   };
 
   getRoom(roomId) {
@@ -263,6 +285,7 @@ function main() {
 
     const path = window.location.hash.substring(2);
     const url = path.split('/')[0];
+    const roomId = path.split('/')[1];
     const pageView = document.getElementById('page-view');
 
     if (url == "") {
@@ -282,11 +305,14 @@ function main() {
     }
 
     else if (url == "chat") {
-      console.log("chatContent");
-      //console.log(chatContent);
-      emptyDOM(pageView);
-      pageView.appendChild(chatView.elem);
+      const room = lobby.getRoom(roomId)
 
+      if (room) {
+        console.log("chatContent");
+        emptyDOM(pageView);
+        pageView.appendChild(chatView.elem);
+        chatView.setRoom(room);
+      }
     }
 
   }
