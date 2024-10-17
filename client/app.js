@@ -248,28 +248,20 @@ class Lobby {
   }
 }
 
-var Service = { //Task 1A
+var Service = { //Task 1A 
 	origin: window.location.origin, //T 1B 
+
 	getAllRooms: function() { //T 1C, structure from ChatGPT
-		return new Promise(function(resolve, reject) {
-			fetch(Service.origin + "/chat")
-				.then(function(response) {
-					if (response.ok) { //If HTTP status not 200
-						return response.json();
-					} else {
-						return response.json().then(function(errorData) {
-							reject(new Error(errorData.message));
-						});
-					}
-				})
-				.then(function(data) {
-					resolve(data);
-				})
-				.catch(function(error) {
-					reject(error);
-				});
-		})
-	}, 
+		return fetch(this.origin + "/chat") //Fetch natively returns a promise
+			.then(response => {
+				if (!response.ok) { //If HTTP status not 200
+					return response.text().then((err) => {throw new Error(err)}); //TODO: Figure out why this error isn't thrown correctly
+				}
+				return response.json();
+			})
+			.then(data => resolve(data))
+			.catch((err) => { throw new Error(err.message) } );
+		},
 
 };
 
@@ -340,20 +332,20 @@ function main() {
 
   function refreshLobby() {
     Service.getAllRooms()
-      .then(function(roomsArray) {
-        roomsArray.array.forEach(currRoom => {
-          if(lobby.rooms[currRoom.id]) {
-            lobby.rooms[currRoom.id].name = currRoom.name;
-            lobby.rooms[currRoom.id].image = currRoom.image;
-          } else {
-            lobby.addRoom(currRoom.name.replaceAll(' ', '-'), currRoom.name, currRoom.image);
-          }
-        });
+      .then(roomsArray => {
+		roomsArray.array.forEach(currRoom => {
+			if(lobby.rooms[currRoom.id]) {
+				lobby.rooms[currRoom.id].name = currRoom.name;
+				lobby.rooms[currRoom.id].image = currRoom.image;
+			} else if (currRoom != null) {
+				lobby.addRoom(currRoom.name, currRoom.name, currRoom.image);
+			}
+		});
       })
 
   }
 
-  setInterval(refreshLobby, 100);
+  setInterval(refreshLobby, 5000);
   window.addEventListener('popstate', renderRoute);
   window.addEventListener('hashchange', renderRoute);
 

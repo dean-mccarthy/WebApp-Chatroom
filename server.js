@@ -1,3 +1,5 @@
+// assuming cpen322-tester.js is in the same directory as server.js
+const cpen322 = require('./cpen322-tester.js');
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -23,3 +25,7 @@ app.use('/', express.static(clientApp, { extensions: ['html'] }));
 app.listen(port, () => {
 	console.log(`${new Date()}  App Started. Listening on ${host}:${port}, serving ${clientApp}`);
 });
+
+// at the very end of server.js
+cpen322.connect('http://3.98.223.41/cpen322/test-a3-server.js');
+cpen322.export(__filename, { app });
