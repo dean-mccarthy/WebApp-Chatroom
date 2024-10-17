@@ -252,18 +252,22 @@ var Service = { //Task 1A
 	origin: window.location.origin, //T 1B 
 
 	getAllRooms: function() { //T 1C, structure from ChatGPT
-		return fetch(this.origin + "/chat") //Fetch natively returns a promise
-			.then(response => {
-				if (!response.ok) { //If HTTP status not 200
-					return response.text().then((err) => {throw new Error(err)}); //TODO: Figure out why this error isn't thrown correctly
+		return new Promise ((resolve, reject) => {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", Service.origin + "/chat");
+			xhr.onload = () => {
+				if (xhr.status === 200) {
+					console.log(xhr.status);
+					resolve(JSON.parse(xhr.response));
+				} else {
+					reject (new Error(xhr.responseText));
 				}
-				return response.json();
-			})
-			.then(data => resolve(data))
-			.catch((err) => { throw new Error(err.message) } );
-		},
-
-};
+			}
+			xhr.onerror = () => reject(new Error(xhr.responseText));
+			xhr.send();
+		})
+	}
+}
 
 // Helper Functions
 
