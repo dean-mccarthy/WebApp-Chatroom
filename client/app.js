@@ -337,17 +337,17 @@ function main() {
   function refreshLobby() {
     Service.getAllRooms()
       .then(roomsArray => {
-		roomsArray.array.forEach(currRoom => {
-			if(lobby.rooms[currRoom.id]) {
+		for (var i = 0; i < roomsArray.length; i++){
+			let currRoom = roomsArray[i];
+			if(lobby.rooms[currRoom.id] !== undefined) {
 				lobby.rooms[currRoom.id].name = currRoom.name;
 				lobby.rooms[currRoom.id].image = currRoom.image;
-			} else if (currRoom != null) {
-				lobby.addRoom(currRoom.name, currRoom.name, currRoom.image);
+			} else {
+				lobby.addRoom(currRoom.id, currRoom.name, currRoom.image, currRoom.messages);
 			}
-		});
-      })
-
-  }
+			}
+  		});	
+	}
 
   setInterval(refreshLobby, 5000);
   window.addEventListener('popstate', renderRoute);
