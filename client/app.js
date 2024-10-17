@@ -301,6 +301,7 @@ function main() {
   const profileView = new ProfileView();
 
   renderRoute();
+  refreshLobby();
 
   function renderRoute() {
 
@@ -335,9 +336,24 @@ function main() {
         chatView.setRoom(room);
       }
     }
+  }
+
+  function refreshLobby() {
+    Service.getAllRooms()
+      .then(function(roomsArray) {
+        roomsArray.array.forEach(currRoom => {
+          if(lobby.rooms[currRoom.id]) {
+            lobby.rooms[currRoom.id].name = currRoom.name;
+            lobby.rooms[currRoom.id].image = currRoom.image;
+          } else {
+            lobby.addRoom(currRoom.name.replaceAll(' ', '-'), currRoom.name, currRoom.image);
+          }
+        });
+      })
 
   }
 
+  setInterval(refreshLobby, 100);
   window.addEventListener('popstate', renderRoute);
   window.addEventListener('hashchange', renderRoute);
 
@@ -346,7 +362,8 @@ function main() {
     lobbyView: lobbyView,
     chatView: chatView,
     profileView: profileView,
-    lobby: lobby
+    lobby: lobby,
+    refreshLobby: refreshLobby
   });
 }
 
