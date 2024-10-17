@@ -1,4 +1,10 @@
- **/node_modules/**
- package-lock.json
- node_modules
- /node_modules
+**/node_modules/**
+package-lock.json
+package.json
+node_modules/*
+node_modules
+.DS_Store
+node_modules/cookie/package.json
+node_modules/express/package.json
+package-lock.json
+package.json

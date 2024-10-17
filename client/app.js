@@ -222,10 +222,6 @@ class Room {
 class Lobby {
   constructor() {
     this.rooms = {};
-    this.rooms['room-1'] = new Room('room-1', `Room 1`);
-    this.rooms['room-2'] = new Room('room-2', `Room 2`);
-    this.rooms['room-3'] = new Room('room-3', `Room 3`);
-    this.rooms['room-4'] = new Room('room-4', `Room 4`);
   };
 
   getRoom(roomId) {
@@ -251,6 +247,31 @@ class Lobby {
 
   }
 }
+
+var Service = { //Task 1A
+	origin: window.location.origin, //T 1B 
+	getAllRooms: function() { //T 1C, structure from ChatGPT
+		return new Promise(function(resolve, reject) {
+			fetch(Service.origin + "/chat")
+				.then(function(response) {
+					if (response.ok) { //If HTTP status not 200
+						return response.json();
+					} else {
+						return response.json().then(function(errorData) {
+							reject(new Error(errorData.message));
+						});
+					}
+				})
+				.then(function(data) {
+					resolve(data);
+				})
+				.catch(function(error) {
+					reject(error);
+				});
+		})
+	}, 
+
+};
 
 // Helper Functions
 
