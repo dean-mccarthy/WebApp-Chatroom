@@ -55,7 +55,33 @@ app.route('/chat')
 		}));
 		res.json(chats);
 	});
+
+app.route('/chat')	
+	.post((req,res) => {
+		const data = req.body
+		if(!data.name){
+			res.status(400).json({message: "Error: Room has no name", data});
+		}
+		else{
+			
+			//Check if this is necessary!
+			var genId = generateUniqueId(data.name);
+
+			const newRoom =  {
+				id: genId,
+				name: data.name,
+				image: data.image
+			}
+			chatrooms.push(newRoom);
+			res.status(200).json({message: "Success", data});
+		}
+	})
 	
+function generateUniqueId(roomName) {
+	const currTime = Date.now().toString();
+	const id = 'room-' + roomName + '-' + currTime; 
+	return id;
+}
 
 // at the very end of server.js
 cpen322.connect('http://3.98.223.41/cpen322/test-a3-server.js');

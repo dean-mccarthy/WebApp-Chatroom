@@ -46,6 +46,7 @@ class LobbyView {
     this.buttonElem.addEventListener('click', () => {
 
       const roomName = this.inputElem.value.trim();
+      const roomImg = "assets/everyone-icon.png" //is this redundant?
       console.log("button clicked");
       if (roomName !== '') {
 
@@ -266,7 +267,28 @@ var Service = { //Task 1A
 			xhr.onerror = () => reject(new Error(xhr.responseText));
 			xhr.send();
 		})
-	}
+	},
+  
+  addRoom: function(data){
+    return new Promise ((resolve, reject) => {
+      let JSONdata = JSON.stringify(data); //Task 3.A
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", Service.origin + "/chat");
+      xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.onload = () => {
+
+				if (xhr.status === 200) {
+					resolve(JSON.parse(xhr.response));
+				} else {
+					reject (new Error(xhr.responseText));
+				}
+			}
+			xhr.onerror = () => reject(new Error(xhr.responseText));
+			xhr.send(JSONdata);
+		}
+  )
+  }
 }
 
 // Helper Functions
@@ -278,7 +300,7 @@ function emptyDOM(elem) {
 
 // Creates a DOM element from the given HTML string
 function createDOM(htmlString) {
-  console.log("createDOM");
+  // console.log("createDOM");
   //console.log(htmlString);
   let template = document.createElement('template');
   template.innerHTML = htmlString.trim();
@@ -307,7 +329,6 @@ function main() {
     const pageView = document.getElementById('page-view');
 
     if (url == "") {
-      console.log("indexContent");
       //console.log(indexContent);
       emptyDOM(pageView);
       pageView.appendChild(lobbyView.elem);
