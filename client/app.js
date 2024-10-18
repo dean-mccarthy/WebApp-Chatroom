@@ -333,11 +333,8 @@ function main() {
   const lobbyView = new LobbyView(lobby);
   const chatView = new ChatView();
   const profileView = new ProfileView();
-  
+
   const socket = new WebSocket("ws://localhost:3000")
-  // const socket = new WebSocket("3.98.223.41:3000")
-  socket.addEventListener("message", (event) => {});
-  // onmessage = (event) => {};
 
   renderRoute();
   refreshLobby();
@@ -390,6 +387,21 @@ function main() {
         }
       });
   }
+
+  socket.addEventListener("message", (event) => {
+    console.log("pre parse", event);
+
+    messageData = JSON.parse(event.data);
+    console.log("post parse", messageData);
+    const roomId = messageData.roomId;
+
+    const room = lobby.getRoom(roomId);
+    room.addMessage(messageData.username, messageData.text);
+
+  });
+
+
+
 
   setInterval(refreshLobby, 5000);
   window.addEventListener('popstate', renderRoute);
