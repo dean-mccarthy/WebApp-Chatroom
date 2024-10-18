@@ -83,7 +83,7 @@ class LobbyView {
 }
 
 class ChatView {
-  constructor() {
+  constructor(socket) {
     this.elem = createDOM(`
 			<div class="content">
 				<h4 class="room-name">Room Name</h4>
@@ -107,7 +107,7 @@ class ChatView {
     this.chatElem = this.elem.querySelector('div.message-list');
     this.inputElem = this.elem.querySelector('textarea');
     this.buttonElem = this.elem.querySelector('button');
-
+    this.socket = socket;
     //task 8d
     this.room = null;
     this.buttonElem.addEventListener('click', () => this.sendMessage());
@@ -122,10 +122,8 @@ class ChatView {
   sendMessage() {
     console.log("button clicked");
     const text = this.inputElem.value;
-    //console.log(text);
     if (text !== '') {
       this.room.addMessage(profile.username, text);
-      // this.inputElem.value = ''; //i think it should be this but it breaks the tests
       this.inputElem.value = '';
     }
 
@@ -326,15 +324,15 @@ function createDOM(htmlString) {
 
 function main() {
 
-  const lobby = new Lobby();
+  const socket = new WebSocket("ws://localhost:3000")
 
+  
+  const lobby = new Lobby();
 
   console.log("page is fully loaded");
   const lobbyView = new LobbyView(lobby);
-  const chatView = new ChatView();
+  const chatView = new ChatView(socket);
   const profileView = new ProfileView();
-
-  const socket = new WebSocket("ws://localhost:3000")
 
   renderRoute();
   refreshLobby();
@@ -389,12 +387,8 @@ function main() {
   }
 
   socket.addEventListener("message", (event) => {
-    console.log("pre parse", event);
-
     messageData = JSON.parse(event.data);
-    console.log("post parse", messageData);
     const roomId = messageData.roomId;
-
     const room = lobby.getRoom(roomId);
     room.addMessage(messageData.username, messageData.text);
 
