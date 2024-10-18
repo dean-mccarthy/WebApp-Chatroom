@@ -6,7 +6,9 @@ const express = require('express');
 const ws = require('ws');
 const { WebSocketServer } = require('ws');
 
-const broker = new WebSocketServer({port: 8000})
+const broker = new WebSocketServer({port: 8000});
+
+
 
 function logRequest(req, res, next){
 	console.log(`${new Date()}  ${req.ip} : ${req.method} ${req.path}`);
@@ -21,12 +23,12 @@ var chatrooms = [ //A3 T2A
 	{
 		id: 'room-1',
 		name: "Gaming",
-		image: 'client/assets/minecraft.jpg'
+		image: 'assets/minecraft.jpg'
 	},
 	{
 		id: 'room-2',
 		name: "Class",
-		image: 'client/assets/everyone-icon.jpg'
+		image: 'assets/everyone-icon.png'
 	},
 ]
 
@@ -90,6 +92,35 @@ function generateUniqueId(roomName) {
 	return id;
 }
 
+broker.on('connection', (socket) => {
+	console.log('New client connected');
+	socket.on('message', (data) => {
+		console.log('Message received from a client:', data);
+		const messageData = JSON.parse(data);
+		const user = messageData.username;
+		console.log(messageData.username);
+		const text = messageData.text;
+		const roomId = messageData.roomId;
+
+		if (messages[roomId]) {
+			const newMessage = {
+				username: user,
+				text: text,
+			  };
+			messages[roomId].push(newMessage);
+		}
+
+		broker.clients.forEach(client => {
+			if (client !== socket && client.readyState === ws.OPEN) { //for all other open clients
+				client.send(JSON.stringify(messageData));
+			}
+		})
+	})
+	socket.on('close', () => {
+        console.log('A client disconnected.');
+    });
+})
+
 // at the very end of server.js
 cpen322.connect('http://3.98.223.41/cpen322/test-a3-server.js');
 cpen322.export(__filename, { 
@@ -98,3 +129,4 @@ cpen322.export(__filename, {
 	chatrooms,
 	broker
  });
+

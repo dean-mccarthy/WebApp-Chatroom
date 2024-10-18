@@ -1,3 +1,4 @@
+
 //task 8a
 var profile = {
   username: "Guest"
@@ -47,7 +48,6 @@ class LobbyView {
 
       const roomName = this.inputElem.value.trim();
       const roomImg = "assets/everyone-icon.png" //is this redundant?
-      console.log("button clicked");
       if (roomName !== '') {
 
         console.log("room name:", roomName);
@@ -165,7 +165,6 @@ class ChatView {
   makeMessage(message) {
 
     if (message.username == profile.username) {
-      console.log('making my-mess');
       const messageItem = createDOM(`
         <div class="message my-message">
           <span class="message-user">${message.username}</span>
@@ -221,7 +220,6 @@ class Room {
   };
 
   addMessage(username, text) {
-    console.log("text in addMessage:" , text );
     //no type check on text, converts to string before trimming
     if (text == "" || String(text).trim().length == 0) //if text is empty or only whitespaces
       return;
@@ -335,7 +333,6 @@ function main() {
 
   const socket = new WebSocket("ws://localhost:8000")
 
-  
   const lobby = new Lobby();
 
   console.log("page is fully loaded");
@@ -399,12 +396,10 @@ function main() {
     messageData = JSON.parse(event.data);
     const roomId = messageData.roomId;
     const room = lobby.getRoom(roomId);
+    console.log("Username is:", messageData.username);
     room.addMessage(messageData.username, messageData.text);
 
   });
-
-
-
 
   setInterval(refreshLobby, 5000);
   window.addEventListener('popstate', renderRoute);
