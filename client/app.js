@@ -277,7 +277,8 @@ var Service = { //Task 1A
 			xhr.open("POST", Service.origin + "/chat");
       xhr.setRequestHeader("Content-Type", "application/json");
 			xhr.onload = () => {
-
+      console.log("xhr response: ")
+      console.log(xhr.response)
 				if (xhr.status === 200) {
 					resolve(JSON.parse(xhr.response));
 				} else {

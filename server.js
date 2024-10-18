@@ -66,14 +66,17 @@ app.route('/chat')
 			
 			//Check if this is necessary!
 			var genId = generateUniqueId(data.name);
-
+			messages[genId] = [];
+			
 			const newRoom =  {
 				id: genId,
 				name: data.name,
-				image: data.image
+				image: data.image,
+				messages: messages[genId]
 			}
+			
 			chatrooms.push(newRoom);
-			res.status(200).json({message: "Success", data});
+			res.status(200).json(newRoom);
 		}
 	})
 	
