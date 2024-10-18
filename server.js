@@ -3,18 +3,10 @@ const cpen322 = require('./cpen322-tester.js');
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
-// const ws = require('ws');
+const ws = require('ws');
 const { WebSocketServer } = require('ws');
 
 const broker = new WebSocketServer({port: 8000})
-// broker.on('connection', function connection(ws) {
-// 	ws.on('message', function message(data) {
-// 	  console.log('received: %s', data);
-// 	});
-  
-// 	ws.send('something');
-//   });
-  
 
 function logRequest(req, res, next){
 	console.log(`${new Date()}  ${req.ip} : ${req.method} ${req.path}`);

@@ -333,7 +333,7 @@ function createDOM(htmlString) {
 
 function main() {
 
-  const socket = new WebSocket("ws://localhost:3000")
+  const socket = new WebSocket("ws://localhost:8000")
 
   
   const lobby = new Lobby();
