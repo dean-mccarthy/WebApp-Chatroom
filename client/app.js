@@ -51,8 +51,23 @@ class LobbyView {
       if (roomName !== '') {
 
         console.log("room name:", roomName);
-        this.lobby.addRoom(roomName.replaceAll(' ', '-'), roomName);
-        this.inputElem.value = '';
+
+        const data = {
+          name: roomName,
+          image: roomImg
+        }
+
+
+        Service.addRoom(data)
+          .then(response => {
+            console.log('Room added', response);
+            this.lobby.addRoom(response.id, response.name);
+            this.inputElem.value = '';
+          })
+          .catch(err => {
+            console.log('Failed to addRoom', err);
+          });
+
       }
     });
 
@@ -140,7 +155,7 @@ class ChatView {
 
 
   makeMessage(message) {
-    
+
     if (message.username == profile.username) {
       console.log('making my-mess');
       const messageItem = createDOM(`
@@ -250,45 +265,45 @@ class Lobby {
 }
 
 var Service = { //Task 1A 
-	origin: window.location.origin, //T 1B 
+  origin: window.location.origin, //T 1B 
 
-	getAllRooms: function() { //T 1C, structure from ChatGPT
-		return new Promise ((resolve, reject) => {
-			var xhr = new XMLHttpRequest();
-			xhr.open("GET", Service.origin + "/chat");
-			xhr.onload = () => {
-				if (xhr.status === 200) {
-					console.log(xhr.status);
-					resolve(JSON.parse(xhr.response));
-				} else {
-					reject (new Error(xhr.responseText));
-				}
-			}
-			xhr.onerror = () => reject(new Error(xhr.responseText));
-			xhr.send();
-		})
-	},
-  
-  addRoom: function(data){
-    return new Promise ((resolve, reject) => {
+  getAllRooms: function () { //T 1C, structure from ChatGPT
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", Service.origin + "/chat");
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          console.log(xhr.status);
+          resolve(JSON.parse(xhr.response));
+        } else {
+          reject(new Error(xhr.responseText));
+        }
+      }
+      xhr.onerror = () => reject(new Error(xhr.responseText));
+      xhr.send();
+    })
+  },
+
+  addRoom: function (data) {
+    return new Promise((resolve, reject) => {
       let JSONdata = JSON.stringify(data); //Task 3.A
 
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", Service.origin + "/chat");
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", Service.origin + "/chat");
       xhr.setRequestHeader("Content-Type", "application/json");
-			xhr.onload = () => {
-      console.log("xhr response: ")
-      console.log(xhr.response)
-				if (xhr.status === 200) {
-					resolve(JSON.parse(xhr.response));
-				} else {
-					reject (new Error(xhr.responseText));
-				}
-			}
-			xhr.onerror = () => reject(new Error(xhr.responseText));
-			xhr.send(JSONdata);
-		}
-  )
+      xhr.onload = () => {
+        console.log("xhr response:")
+        console.log(xhr.response)
+        if (xhr.status === 200) {
+          resolve(JSON.parse(xhr.response));
+        } else {
+          reject(new Error(xhr.responseText));
+        }
+      }
+      xhr.onerror = () => reject(new Error(xhr.responseText));
+      xhr.send(JSONdata);
+    }
+    )
   }
 }
 
@@ -359,17 +374,17 @@ function main() {
   function refreshLobby() {
     Service.getAllRooms()
       .then(roomsArray => {
-		for (var i = 0; i < roomsArray.length; i++){
-			let currRoom = roomsArray[i];
-			if(lobby.rooms[currRoom.id] !== undefined) {
-				lobby.rooms[currRoom.id].name = currRoom.name;
-				lobby.rooms[currRoom.id].image = currRoom.image;
-			} else {
-				lobby.addRoom(currRoom.id, currRoom.name, currRoom.image, currRoom.messages);
-			}
-			}
-  		});	
-	}
+        for (var i = 0; i < roomsArray.length; i++) {
+          let currRoom = roomsArray[i];
+          if (lobby.rooms[currRoom.id] !== undefined) {
+            lobby.rooms[currRoom.id].name = currRoom.name;
+            lobby.rooms[currRoom.id].image = currRoom.image;
+          } else {
+            lobby.addRoom(currRoom.id, currRoom.name, currRoom.image, currRoom.messages);
+          }
+        }
+      });
+  }
 
   setInterval(refreshLobby, 5000);
   window.addEventListener('popstate', renderRoute);
