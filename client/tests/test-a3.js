@@ -5,7 +5,7 @@ const __tester = {
 	exports: new Map(),
 	defaults: {
 		image: 'assets/everyone-icon.png',
-		webSocketServer: 'ws://localhost:8000'
+		webSocketServer: 'ws://localhost:3000'
 	},
 	oldAddEventListener: HTMLElement.prototype.addEventListener,
 	newAddEventListener: function (type, listener, ...options){

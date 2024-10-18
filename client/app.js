@@ -333,6 +333,11 @@ function main() {
   const lobbyView = new LobbyView(lobby);
   const chatView = new ChatView();
   const profileView = new ProfileView();
+  
+  const socket = new WebSocket("ws://localhost:3000")
+  // const socket = new WebSocket("3.98.223.41:3000")
+  socket.addEventListener("message", (event) => {});
+  // onmessage = (event) => {};
 
   renderRoute();
   refreshLobby();
@@ -396,7 +401,8 @@ function main() {
     chatView: chatView,
     profileView: profileView,
     lobby: lobby,
-    refreshLobby: refreshLobby
+    refreshLobby: refreshLobby,
+    socket: socket
   });
 }
 
