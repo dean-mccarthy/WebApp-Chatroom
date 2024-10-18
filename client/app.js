@@ -108,6 +108,7 @@ class ChatView {
     this.inputElem = this.elem.querySelector('textarea');
     this.buttonElem = this.elem.querySelector('button');
     this.socket = socket;
+    console.log("this.socket in ChatView:", this.socket)
     //task 8d
     this.room = null;
     this.buttonElem.addEventListener('click', () => this.sendMessage());
@@ -118,13 +119,22 @@ class ChatView {
     });
   }
 
-  // //task 8c
+  //task 8c
   sendMessage() {
     console.log("button clicked");
+
     const text = this.inputElem.value;
     if (text !== '') {
       this.room.addMessage(profile.username, text);
       this.inputElem.value = '';
+
+      //task 4d
+      const message ={
+        roomId: this.room.id,
+        username: profile.username,
+        text: text
+      }
+      this.socket.send(JSON.stringify(message));
     }
 
   }
@@ -211,8 +221,7 @@ class Room {
   };
 
   addMessage(username, text) {
-    console.log("text:");
-    console.log(text);
+    console.log("text in addMessage:" , text );
     //no type check on text, converts to string before trimming
     if (text == "" || String(text).trim().length == 0) //if text is empty or only whitespaces
       return;
