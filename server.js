@@ -124,11 +124,12 @@ broker.on('connection', (socket) => {
 })
 
 // at the very end of server.js
-cpen322.connect('http://3.98.223.41/cpen322/test-a3-server.js');
+cpen322.connect('http://3.98.223.41/cpen322/test-a4-server.js');
 cpen322.export(__filename, { 
 	app,
 	messages,
 	chatrooms,
-	broker
+	broker,
+	db
  });
 

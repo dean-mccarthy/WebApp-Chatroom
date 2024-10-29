@@ -412,7 +412,7 @@ function main() {
     profileView: profileView,
     lobby: lobby,
     refreshLobby: refreshLobby,
-    socket: socket
+    socket: socket,
   });
 }
 
