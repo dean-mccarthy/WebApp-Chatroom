@@ -1,3 +1,4 @@
+
 //task 8a
 var profile = {
   username: "Guest"
@@ -46,12 +47,27 @@ class LobbyView {
     this.buttonElem.addEventListener('click', () => {
 
       const roomName = this.inputElem.value.trim();
-      console.log("button clicked");
+      const roomImg = "assets/everyone-icon.png" //is this redundant?
       if (roomName !== '') {
 
         console.log("room name:", roomName);
-        this.lobby.addRoom(roomName.replaceAll(' ', '-'), roomName);
-        this.inputElem.value = '';
+
+        const data = {
+          name: roomName,
+          image: roomImg
+        }
+
+
+        Service.addRoom(data)
+          .then(response => {
+            console.log('Room added', response);
+            this.lobby.addRoom(response.id, response.name);
+            this.inputElem.value = '';
+          })
+          .catch(err => {
+            console.log('Failed to addRoom', err);
+          });
+
       }
     });
 
@@ -67,7 +83,7 @@ class LobbyView {
 }
 
 class ChatView {
-  constructor() {
+  constructor(socket) {
     this.elem = createDOM(`
 			<div class="content">
 				<h4 class="room-name">Room Name</h4>
@@ -91,7 +107,8 @@ class ChatView {
     this.chatElem = this.elem.querySelector('div.message-list');
     this.inputElem = this.elem.querySelector('textarea');
     this.buttonElem = this.elem.querySelector('button');
-
+    this.socket = socket;
+    console.log("this.socket in ChatView:", this.socket)
     //task 8d
     this.room = null;
     this.buttonElem.addEventListener('click', () => this.sendMessage());
@@ -102,15 +119,22 @@ class ChatView {
     });
   }
 
-  // //task 8c
+  //task 8c
   sendMessage() {
     console.log("button clicked");
+
     const text = this.inputElem.value;
-    //console.log(text);
     if (text !== '') {
       this.room.addMessage(profile.username, text);
-      // this.inputElem.value = ''; //i think it should be this but it breaks the tests
       this.inputElem.value = '';
+
+      //task 4d
+      const message ={
+        roomId: this.room.id,
+        username: profile.username,
+        text: text
+      }
+      this.socket.send(JSON.stringify(message));
     }
 
   }
@@ -139,9 +163,8 @@ class ChatView {
 
 
   makeMessage(message) {
-    
+
     if (message.username == profile.username) {
-      console.log('making my-mess');
       const messageItem = createDOM(`
         <div class="message my-message">
           <span class="message-user">${message.username}</span>
@@ -197,8 +220,6 @@ class Room {
   };
 
   addMessage(username, text) {
-    console.log("text:");
-    console.log(text);
     //no type check on text, converts to string before trimming
     if (text == "" || String(text).trim().length == 0) //if text is empty or only whitespaces
       return;
@@ -249,24 +270,46 @@ class Lobby {
 }
 
 var Service = { //Task 1A 
-	origin: window.location.origin, //T 1B 
+  origin: window.location.origin, //T 1B 
 
-	getAllRooms: function() { //T 1C, structure from ChatGPT
-		return new Promise ((resolve, reject) => {
-			var xhr = new XMLHttpRequest();
-			xhr.open("GET", Service.origin + "/chat");
-			xhr.onload = () => {
-				if (xhr.status === 200) {
-					console.log(xhr.status);
-					resolve(JSON.parse(xhr.response));
-				} else {
-					reject (new Error(xhr.responseText));
-				}
-			}
-			xhr.onerror = () => reject(new Error(xhr.responseText));
-			xhr.send();
-		})
-	}
+  getAllRooms: function () { //T 1C, structure from ChatGPT
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", Service.origin + "/chat");
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          console.log(xhr.status);
+          resolve(JSON.parse(xhr.response));
+        } else {
+          reject(new Error(xhr.responseText));
+        }
+      }
+      xhr.onerror = () => reject(new Error(xhr.responseText));
+      xhr.send();
+    })
+  },
+
+  addRoom: function (data) {
+    return new Promise((resolve, reject) => {
+      let JSONdata = JSON.stringify(data); //Task 3.A
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", Service.origin + "/chat");
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onload = () => {
+        console.log("xhr response:")
+        console.log(xhr.response)
+        if (xhr.status === 200) {
+          resolve(JSON.parse(xhr.response));
+        } else {
+          reject(new Error(xhr.responseText));
+        }
+      }
+      xhr.onerror = () => reject(new Error(xhr.responseText));
+      xhr.send(JSONdata);
+    }
+    )
+  }
 }
 
 // Helper Functions
@@ -278,7 +321,7 @@ function emptyDOM(elem) {
 
 // Creates a DOM element from the given HTML string
 function createDOM(htmlString) {
-  console.log("createDOM");
+  // console.log("createDOM");
   //console.log(htmlString);
   let template = document.createElement('template');
   template.innerHTML = htmlString.trim();
@@ -288,12 +331,13 @@ function createDOM(htmlString) {
 
 function main() {
 
-  const lobby = new Lobby();
+  const socket = new WebSocket("ws://localhost:8000")
 
+  const lobby = new Lobby();
 
   console.log("page is fully loaded");
   const lobbyView = new LobbyView(lobby);
-  const chatView = new ChatView();
+  const chatView = new ChatView(socket);
   const profileView = new ProfileView();
 
   renderRoute();
@@ -307,7 +351,6 @@ function main() {
     const pageView = document.getElementById('page-view');
 
     if (url == "") {
-      console.log("indexContent");
       //console.log(indexContent);
       emptyDOM(pageView);
       pageView.appendChild(lobbyView.elem);
@@ -337,17 +380,26 @@ function main() {
   function refreshLobby() {
     Service.getAllRooms()
       .then(roomsArray => {
-		for (var i = 0; i < roomsArray.length; i++){
-			let currRoom = roomsArray[i];
-			if(lobby.rooms[currRoom.id] !== undefined) {
-				lobby.rooms[currRoom.id].name = currRoom.name;
-				lobby.rooms[currRoom.id].image = currRoom.image;
-			} else {
-				lobby.addRoom(currRoom.id, currRoom.name, currRoom.image, currRoom.messages);
-			}
-			}
-  		});	
-	}
+        for (var i = 0; i < roomsArray.length; i++) {
+          let currRoom = roomsArray[i];
+          if (lobby.rooms[currRoom.id] !== undefined) {
+            lobby.rooms[currRoom.id].name = currRoom.name;
+            lobby.rooms[currRoom.id].image = currRoom.image;
+          } else {
+            lobby.addRoom(currRoom.id, currRoom.name, currRoom.image, currRoom.messages);
+          }
+        }
+      });
+  }
+
+  socket.addEventListener("message", (event) => {
+    messageData = JSON.parse(event.data);
+    const roomId = messageData.roomId;
+    const room = lobby.getRoom(roomId);
+    console.log("Username is:", messageData.username);
+    room.addMessage(messageData.username, messageData.text);
+
+  });
 
   setInterval(refreshLobby, 5000);
   window.addEventListener('popstate', renderRoute);
@@ -359,7 +411,8 @@ function main() {
     chatView: chatView,
     profileView: profileView,
     lobby: lobby,
-    refreshLobby: refreshLobby
+    refreshLobby: refreshLobby,
+    socket: socket
   });
 }
 

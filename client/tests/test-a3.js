@@ -1247,6 +1247,7 @@ window.addEventListener('load', () => {
 							else {
 								let lastMessage = messagesAfterA[messagesAfterA.length - 1];
 								if (lastMessage.username !== testMessage.username){
+									console.log(lastMessage.username, testMessage.username)
 									result.comments.push(printError('The message added in messages["'+testRoomId+'"] does not have the same username as the test message'));
 								}
 								else if (lastMessage.text !== testMessage.text){
