@@ -3,6 +3,7 @@ const cpen322 = require('./cpen322-tester.js');
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
+const Database = require('./Database.js');
 
 function logRequest(req, res, next){
 	console.log(`${new Date()}  ${req.ip} : ${req.method} ${req.path}`);
@@ -12,6 +13,7 @@ function logRequest(req, res, next){
 const host = 'localhost';
 const port = 3000;
 const clientApp = path.join(__dirname, 'client');
+const db = Database('mongodb://localhost:27017', 'cpen322-messenger');
 
 var chatrooms = [ //A3 T2A
 	{
