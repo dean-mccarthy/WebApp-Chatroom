@@ -58,7 +58,6 @@ app.route('/chat')
 				image: room.image,
 				messages: messages[room._id]
 			}));
-			console.log(chats);
 			res.json(chats);
 		});
 		

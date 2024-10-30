@@ -380,13 +380,14 @@ function main() {
   function refreshLobby() {
     Service.getAllRooms()
       .then(roomsArray => {
+        //console.log(roomsArray);
         for (var i = 0; i < roomsArray.length; i++) {
           let currRoom = roomsArray[i];
-          if (lobby.rooms[currRoom._id] !== undefined) {
-            lobby.rooms[currRoom._id].name = currRoom.name;
-            lobby.rooms[currRoom._id].image = currRoom.image;
+          if (lobby.rooms[currRoom.id] !== undefined) {
+            lobby.rooms[currRoom.id].name = currRoom.name;
+            lobby.rooms[currRoom.id].image = currRoom.image;
           } else {
-            lobby.addRoom(currRoom._id, currRoom.name, currRoom.image, currRoom.messages);
+            lobby.addRoom(currRoom.id, currRoom.name, currRoom.image, currRoom.messages);
           }
         }
       });
