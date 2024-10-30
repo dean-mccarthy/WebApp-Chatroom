@@ -53,7 +53,7 @@ app.route('/chat')
 		db.getRooms()
 			.then(rooms => {
 			const chats = rooms.map(room => ({
-				id: room._id,
+				_id: room._id,
 				name: room.name,
 				image: room.image,
 				messages: messages[room._id]
