@@ -21,24 +21,19 @@ const port = 3000;
 const clientApp = path.join(__dirname, 'client');
 const db = Database('mongodb://localhost:27017', 'cpen322-messenger');
 
-var chatrooms = [ //A3 T2A
-	{
-		id: 'room-1',
-		name: "Gaming",
-		image: 'assets/minecraft.jpg'
-	},
-	{
-		id: 'room-2',
-		name: "Class",
-		image: 'assets/everyone-icon.png'
-	},
-]
 
-var messages = {};
+var messages = {}; 
 
-chatrooms.forEach(currRoom => { //A3 T2B
-	messages[currRoom.id] = [];
-})
+db.getRooms()
+	.then(rooms => {
+		rooms.forEach(room => {
+			messages[room._id] = [];
+		});
+	})
+	.catch(err => {
+		console.error("Error initializing messages:", err);
+	});
+
 
 // express app
 let app = express();
@@ -55,13 +50,18 @@ app.listen(port, () => {
 
 app.route('/chat')
 	.get((req,res) => {
-		const chats = chatrooms.map(room => ({
-			id: room.id,
-			name: room.name,
-			image: room.image,
-			messages: messages[room.id]
-		}));
-		res.json(chats);
+		db.getRooms()
+			.then(rooms => {
+			const chats = rooms.map(room => ({
+				id: room._id,
+				name: room.name,
+				image: room.image,
+				messages: messages[room._id]
+			}));
+			console.log(chats);
+			res.json(chats);
+		});
+		
 	});
 
 app.route('/chat')	
@@ -86,6 +86,23 @@ app.route('/chat')
 			chatrooms.push(newRoom);
 			res.status(200).json(newRoom);
 		}
+	})
+
+app.route('/chat/:room_id')
+	.get((req, res) => {
+		const roomId = req.params.room_id;
+		db.getRoom(roomId)
+			.then(room => {
+				if(room) {
+					res.json(room);
+				} else {
+					res.status(404).json({error: 'Room ${roomId} was not found'});
+				}
+			})
+			.catch(err => {
+                console.error("Error fetching room:", err);
+                res.status(500).json({ error: "An error occurred while retrieving the room" });
+            });
 	})
 	
 function generateUniqueId(roomName) {
@@ -128,7 +145,6 @@ cpen322.connect('http://3.98.223.41/cpen322/test-a4-server.js');
 cpen322.export(__filename, { 
 	app,
 	messages,
-	chatrooms,
 	broker,
 	db
  });

@@ -22,20 +22,37 @@ function Database(mongoUrl, dbName){
 	);
 }
 
-Database.prototype.getRooms = function(){
+Database.prototype.getRooms = function(){ //chatGPT structure
 	return this.connected.then(db =>
 		new Promise((resolve, reject) => {
 			/* TODO: read the chatrooms from `db`
 			 * and resolve an array of chatrooms */
-		})
-	)
+			console.log("Finding rooms");
+			resolve(db.collection('chatrooms') //search chatrooms
+				.find() //find all
+				.toArray()); //else resolve with rooms array
+				})
+		)
 }
 
-Database.prototype.getRoom = function(room_id){
+Database.prototype.getRoom = function(room_id){ //chatGPT structure
 	return this.connected.then(db =>
 		new Promise((resolve, reject) => {
 			/* TODO: read the chatroom from `db`
 			 * and resolve the result */
+			let query = {_id: room_id};
+
+			if (!(room_id instanceof ObjectId)) {
+				query = {_id: room_id}; // if fail then give query as string
+			}
+
+			db.collection('chatrooms')
+				.findOne(query, (err, room) => {
+					if(err) {
+						return reject(err);
+					}
+					resolve (room || null); // resolve null if not found
+				})
 		})
 	)
 }
