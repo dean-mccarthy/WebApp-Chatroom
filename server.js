@@ -76,13 +76,13 @@ app.route('/chat')
 			messages[genId] = [];
 			
 			const newRoom =  {
-				id: genId,
+				_id: genId,
 				name: data.name,
 				image: data.image,
 				messages: messages[genId]
 			}
 			
-			chatrooms.push(newRoom);
+			db.addRoom(newRoom)
 			res.status(200).json(newRoom);
 		}
 	})

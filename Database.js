@@ -38,15 +38,18 @@ Database.prototype.getRooms = function(){ //chatGPT structure
 Database.prototype.getRoom = function(room_id){ //chatGPT structure
 	return this.connected.then(db =>
 		new Promise((resolve, reject) => {
+
 			let query = {_id: room_id};
 
 			if (!(room_id instanceof ObjectId)) {
 				query = {_id: room_id}; // if fail then give query as string
 			}
-
+			
+			console.log("getRoom query")
+			console.log(query)
 			db.collection('chatrooms')
 				.findOne(query)
-				.then(room => resolve (room || null))
+				.then(room => resolve (room))
 				.catch(err => reject(err)) 
 		})
 	)
@@ -55,9 +58,23 @@ Database.prototype.getRoom = function(room_id){ //chatGPT structure
 Database.prototype.addRoom = function(room){
 	return this.connected.then(db => 
 		new Promise((resolve, reject) => {
-			/* TODO: insert a room in the "chatrooms" collection in `db`
-			 * and resolve the newly added room */
-		})
+			console.log('ADDING ROOM')
+            if (!room.name) {
+                return reject(new Error("Room name required"));
+            }
+			console.log("addRoom room:" )
+			console.log(room)
+
+            db.collection('chatrooms').insertOne(room)
+                .then(result => {
+                    // Retrieve the inserted room object including the assigned _id
+                    const insertedRoom = {_id: result._id , ...room};
+                    console.log("addRoom insertRoom:" )
+					console.log(insertedRoom)
+					resolve(insertedRoom); // Resolve with the new room object
+                })
+                .catch(err => reject(err)); // Reject on error
+        })
 	)
 }
 
