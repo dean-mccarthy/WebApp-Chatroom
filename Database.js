@@ -38,8 +38,6 @@ Database.prototype.getRooms = function(){ //chatGPT structure
 Database.prototype.getRoom = function(room_id){ //chatGPT structure
 	return this.connected.then(db =>
 		new Promise((resolve, reject) => {
-			/* TODO: read the chatroom from `db`
-			 * and resolve the result */
 			let query = {_id: room_id};
 
 			if (!(room_id instanceof ObjectId)) {
@@ -47,12 +45,9 @@ Database.prototype.getRoom = function(room_id){ //chatGPT structure
 			}
 
 			db.collection('chatrooms')
-				.findOne(query, (err, room) => {
-					if(err) {
-						return reject(err);
-					}
-					resolve (room || null); // resolve null if not found
-				})
+				.findOne(query)
+				.then(room => resolve (room || null))
+				.catch(err => reject(err)) 
 		})
 	)
 }
