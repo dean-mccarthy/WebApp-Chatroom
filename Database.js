@@ -48,11 +48,11 @@ Database.prototype.getRoom = function(room_id){ //chatGPT structure
 				isString = true;
 			}
 
-			let objID = isString ? room_id : db.collection("chatrooms").findOne({_id: ObjectId(room_id)});
+			let objID = isString ? room_id : ObjectId(room_id);
 
 			let query = {_id: objID};
-			console.log("getRoom query")
-			console.log(query)
+			console.log("getRoom query");
+			console.log(query);
 			db.collection('chatrooms')
 				.findOne(query)
 				.then(room => resolve(room))
@@ -71,13 +71,19 @@ Database.prototype.addRoom = function(room){
 			console.log("addRoom room:" );
 			console.log(room);
 
-			if(!room._id) {
-				room._id = ObjectId.toString();
-			}
 
-			
-            db.collection('chatrooms').insertOne(room).catch(err => reject(err)); // Reject on error
-			resolve(room);
+            db.collection('chatrooms').insertOne(room)
+                .then(result => {
+                    // Retrieve the inserted room object including the assigned _id
+                    var insertedRoom = {_id: result._id, ...room};
+					if (room._id) {
+						insertedRoom = {_id: room._id, ...room};
+					}
+                    console.log("addRoom insertRoom:" )
+					console.log(insertedRoom)
+					resolve(insertedRoom); // Resolve with the new room object
+                })
+                .catch(err => reject(err)); // Reject on error
         })
 	)
 }
