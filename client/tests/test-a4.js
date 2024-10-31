@@ -273,7 +273,6 @@ window.addEventListener('load', () => {
 			try {
 				print('(Server) Checking "Database.prototype.getRoom" implementation (by calling "db.getRoom")');
 				let room = await remoteFunc('callObjectByString', 'db.getRoom', __tester.defaults.testRoomId);
-
 				// it resolved to something
 				result.score += 0.5;
 				printOK('"db.getRoom" resolved to an object');
@@ -296,10 +295,10 @@ window.addEventListener('load', () => {
 					printOK('The object has the right properties');
 
 					// check GET /chat/:room_id endpoint
-					print('(Server) Checking if "/chat/:room_id" GET endpoint was defined');
+					console.log('(Server) Checking if "/chat/:room_id" GET endpoint was defined');
 					try {
 						let response = await safeFetch('/chat/' + __tester.defaults.testRoomId);
-
+						print(response);
 						if (isEquivalent(room, response)){
 							result.score += 1;
 							printOK('GET "/chat/:room_id" endpoint returns the object from "db.getRoom(room_id)"');

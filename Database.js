@@ -1,3 +1,4 @@
+const { query } = require('express');
 const { MongoClient, ObjectId } = require('mongodb');	// require the mongodb driver
 
 /**
@@ -39,17 +40,22 @@ Database.prototype.getRoom = function(room_id){ //chatGPT structure
 	return this.connected.then(db =>
 		new Promise((resolve, reject) => {
 
-			let query = {_id: room_id};
+			let isString = false;
 
-			if (!(room_id instanceof ObjectId)) {
-				query = {_id: room_id}; // if fail then give query as string
+			try {
+				ObjectId(room_id);
+			} catch(err) {
+				isString = true;
 			}
-			
+
+			let objID = isString ? room_id : db.collection("chatrooms").findOne({_id: ObjectId(room_id)});
+
+			let query = {_id: objID};
 			console.log("getRoom query")
 			console.log(query)
 			db.collection('chatrooms')
 				.findOne(query)
-				.then(room => resolve (room))
+				.then(room => resolve(room))
 				.catch(err => reject(err)) 
 		})
 	)
@@ -62,18 +68,16 @@ Database.prototype.addRoom = function(room){
             if (!room.name) {
                 return reject(new Error("Room name required"));
             }
-			console.log("addRoom room:" )
-			console.log(room)
+			console.log("addRoom room:" );
+			console.log(room);
 
-            db.collection('chatrooms').insertOne(room)
-                .then(result => {
-                    // Retrieve the inserted room object including the assigned _id
-                    const insertedRoom = {_id: result._id , ...room};
-                    console.log("addRoom insertRoom:" )
-					console.log(insertedRoom)
-					resolve(insertedRoom); // Resolve with the new room object
-                })
-                .catch(err => reject(err)); // Reject on error
+			if(!room._id) {
+				room._id = ObjectId.toString();
+			}
+
+			
+            db.collection('chatrooms').insertOne(room).catch(err => reject(err)); // Reject on error
+			resolve(room);
         })
 	)
 }
