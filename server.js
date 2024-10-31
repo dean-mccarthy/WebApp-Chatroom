@@ -109,6 +109,7 @@ app.route('/chat/:room_id')
 		const roomId = req.params.room_id;
 		const before =  req.params.before; //??
 		console.log("roomId: ", roomId, " before: ", before)
+
 		db.getLastConversation(roomId, before)
 			.then(conversation => {
 				console.log("in server.js")
@@ -148,7 +149,8 @@ broker.on('connection', (socket) => {
 			messages[roomId].push(newMessage);
 			//a4t3pd
 			if((messages[roomId].length) >= messageBlockSize){
-				db.addConversation({_id: roomId, timestamp: Date.now(), messages: messages[roomId]})
+				console.log("message size: ", messages[roomId].length)
+				db.addConversation({room_id: roomId, timestamp: Date.now(), messages: messages[roomId]})
 				.then(result => {
 					messages[roomId] = []
 					console.log(result)

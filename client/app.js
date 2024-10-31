@@ -309,25 +309,26 @@ var Service = { //Task 1A
       xhr.send(JSONdata);
     }
     )
-  }
+  },
 
-  // getLastConversation: function (roomId, before) {
-  //   return new Promise((resolve, reject) => {
-  //     var xhr = new XMLHttpRequest();
-  //     var url = Service.origin + `/chat/${roomId}/messages${before ? `?before=${before}` : ''}`;
-  //     xhr.open("GET", url);
-  //     xhr.onload = () => {
-  //       if (xhr.status === 200) {
-  //         console.log(xhr.status);
-  //         resolve(JSON.parse(xhr.response));
-  //       } else {
-  //         reject(new Error(xhr.responseText));
-  //       }
-  //     }
-  //     xhr.onerror = () => reject(new Error(xhr.responseText));
-  //     xhr.send();
-  //   })
-  // }
+  getLastConversation: function (roomId, before) {
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      var url = Service.origin + `/chat/${roomId}/messages${before ? `?before=${before}` : ''}`;
+      console.log("url: ", url)
+      xhr.open("GET", url);
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          console.log(xhr.status);
+          resolve(JSON.parse(xhr.response));
+        } else {
+          reject(new Error(xhr.responseText));
+        }
+      }
+      xhr.onerror = () => reject(new Error(xhr.responseText));
+      xhr.send();
+    })
+  }
 }
 
 // Helper Functions
