@@ -20,7 +20,7 @@ const host = 'localhost';
 const port = 3000;
 const clientApp = path.join(__dirname, 'client');
 const db = Database('mongodb://localhost:27017', 'cpen322-messenger');
-
+const messageBlockSize = 10;
 
 var messages = {}; 
 
@@ -103,6 +103,26 @@ app.route('/chat/:room_id')
                 res.status(500).json({ error: "An error occurred while retrieving the room" });
             });
 	})
+
+	app.route('/chat/:room_id/messages')
+	.get((req, res) => {
+		const roomId = req.params.room_id;
+		const before =  req.params.before; //??
+		console.log("roomId: ", roomId, " before: ", before)
+		db.getLastConversation(roomId, before)
+			.then(conversation => {
+				console.log("in server.js")
+				if(conversation) {
+					res.json(conversation);
+				} else {
+					res.status(404).json({error: 'conversation ${roomId}, ${before} was not found'});
+				}
+			})
+			.catch(err => {
+                console.error("Error fetching conversation:", err);
+                res.status(500).json({ error: "An error occurred while retrieving the conversation" });
+            });
+	})
 	
 function generateUniqueId(roomName) {
 	const currTime = Date.now().toString();
@@ -126,6 +146,16 @@ broker.on('connection', (socket) => {
 				text: text,
 			  };
 			messages[roomId].push(newMessage);
+			//a4t3pd
+			if(sizeof(messages[roomId]) >= messageBlockSize){
+				db.addConversation({_id: roomId, timestamp: Date.now(), messages: messages[roomId]})
+				.then(result => {
+					messages[roomId] = []
+					console.log(result)
+				})
+				.catch(console.log("error adding conversation in broker"))
+				
+			}
 		}
 
 		broker.clients.forEach(client => {

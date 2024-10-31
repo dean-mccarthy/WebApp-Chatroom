@@ -51,6 +51,7 @@ Database.prototype.getRoom = function(room_id){ //chatGPT structure
 			}
 			catch (error) {
 				console.log("cannot cast to ObjectID: ", error.message)
+				console.log("using string instead")
 			}
 
 			let query = {_id: id};
@@ -96,8 +97,32 @@ Database.prototype.addRoom = function(room){
 Database.prototype.getLastConversation = function(room_id, before){
 	return this.connected.then(db =>
 		new Promise((resolve, reject) => {
-			/* TODO: read a conversation from `db` based on the given arguments
-			 * and resolve if found */
+			console.log("retriving last conversation")
+			console.log("looking for last conversation with ", room_id, " before", before)
+
+			if(!before || before == null ){
+				before = Date.now()
+			}
+			var lastConversation; 
+			var query = {room_id: room_id, timestamp: { $lte: before }}
+			
+			db.collection('conversations').find(query).toArray()
+				.then(result => {
+					if(result.length === 0 || !result){
+						console.log(result)
+						console.log("cannot find conversation, resolving null")
+						lastConversation = null
+					}
+					
+					result.sort((a, b) => a.timestamp - b.timestamp);
+					console.log("conversation found, resolving ", result[0])
+					lastConversation = result[0];
+
+					resolve(lastConversation)
+					
+				})
+				.catch(err => reject(err)); // Reject on error
+			
 		})
 	)
 }
@@ -105,8 +130,29 @@ Database.prototype.getLastConversation = function(room_id, before){
 Database.prototype.addConversation = function(conversation){
 	return this.connected.then(db =>
 		new Promise((resolve, reject) => {
-			/* TODO: insert a conversation in the "conversations" collection in `db`
-			 * and resolve the newly added conversation */
+            // if (!conversation.room_id || !conversation.timestamp || !conversation.messages) {
+            //     return reject(new Error("Missing required field (room_id or timestamp or messages)"));
+            // }		
+
+			//for debugging
+			if (!conversation.room_id) {
+				return reject(new Error("Missing required field: room_id"));
+			}	
+			else if (!conversation.timestamp) {
+				return reject(new Error("Missing required field: timestamp"));
+			}
+			else if (!conversation.messages) {
+				return reject(new Error("Missing required field: messages"));
+			}
+			
+			db.collection('conversations').insertOne(conversation)
+                .then(result => {
+					var insertedConvo = { ...conversation};
+					console.log("added conversation: ", result, "\n inserted conversation: ", insertedConvo)
+					resolve(insertedConvo); // Resolve with the new room object
+                })
+                .catch(err => reject(err)); // Reject on error
+
 		})
 	)
 }
