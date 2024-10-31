@@ -36,30 +36,35 @@ Database.prototype.getRooms = function(){ //chatGPT structure
 		)
 }
 
+
 Database.prototype.getRoom = function(room_id){ //chatGPT structure
 	return this.connected.then(db =>
 		new Promise((resolve, reject) => {
 
-			let isString = false;
+			console.log("searching for room with roomid: ", room_id)
+			let id = room_id
 
-			try {
-				ObjectId(room_id);
-			} catch(err) {
-				isString = true;
+			try{
+				//can only cast if room_id is a hexadecimal or integer				
+				console.log("attempting to cast room_id to ObjectID")
+				id = new ObjectId(room_id)	//TODO: fix deprecation
+			}
+			catch (error) {
+				console.log("cannot cast to ObjectID: ", error.message)
 			}
 
-			let objID = isString ? room_id : ObjectId(room_id);
+			let query = {_id: id};
 
-			let query = {_id: objID};
-			console.log("getRoom query");
-			console.log(query);
+			console.log("query: ", query, " with id of type ", typeof(id), ": ", id)
+
 			db.collection('chatrooms')
 				.findOne(query)
-				.then(room => resolve(room))
+				.then(room => resolve (room))
 				.catch(err => reject(err)) 
 		})
 	)
 }
+
 
 Database.prototype.addRoom = function(room){
 	return this.connected.then(db => 
