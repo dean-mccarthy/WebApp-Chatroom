@@ -147,7 +147,7 @@ broker.on('connection', (socket) => {
 			  };
 			messages[roomId].push(newMessage);
 			//a4t3pd
-			if(sizeof(messages[roomId]) >= messageBlockSize){
+			if((messages[roomId].length) >= messageBlockSize){
 				db.addConversation({_id: roomId, timestamp: Date.now(), messages: messages[roomId]})
 				.then(result => {
 					messages[roomId] = []
@@ -175,6 +175,7 @@ cpen322.export(__filename, {
 	app,
 	messages,
 	broker,
-	db
+	db,
+	messageBlockSize
  });
 

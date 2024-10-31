@@ -104,7 +104,7 @@ Database.prototype.getLastConversation = function(room_id, before){
 				before = Date.now()
 			}
 			var lastConversation; 
-			var query = {room_id: room_id, timestamp: { $lte: before }}
+			var query = {room_id: room_id, timestamp: { $lt: before }}
 			
 			db.collection('conversations').find(query).toArray()
 				.then(result => {
@@ -114,7 +114,7 @@ Database.prototype.getLastConversation = function(room_id, before){
 						lastConversation = null
 					}
 					
-					result.sort((a, b) => a.timestamp - b.timestamp);
+					result.sort((a, b) => b.timestamp - a.timestamp);
 					console.log("conversation found, resolving ", result[0])
 					lastConversation = result[0];
 
