@@ -1,3 +1,28 @@
+function makeConversationLoader(room) {
+  let lastTime = Date.now();
+  let loop = true;
+
+  while (loop) {
+    room.canLoadConversation = false;
+    new Promise((resolve, reject) => {
+      Service.getLastConversation(room._id, lastTime)
+      .then(lastConvo => {
+        if (!lastConvo) {
+          loop = false;
+          reject(null);
+          return;
+        }
+        else {
+          lastTime = lastConvo.timestamp;
+          room.canLoadConversation = true;
+          room.addConversation(lastConvo);
+          resolve(lastConvo);
+        }
+      })
+    })
+    
+  }
+}
 
 //task 8a
 var profile = {
@@ -119,6 +144,7 @@ class ChatView {
     });
   }
 
+
   //task 8c
   sendMessage() {
     console.log("button clicked");
@@ -217,6 +243,8 @@ class Room {
     this.name = name;
     this.image = image;
     this.messages = messages;
+    this.getLastConversation = makeConversationLoader(this);
+    this.canLoadConversation = true;
   };
 
   addMessage(username, text) {
@@ -424,31 +452,7 @@ function main() {
       });
   }
 
-  function makeConversationLoader(room) {
-    let lastTime = Date.now();
-    let loop = true;
-
-    while (loop) {
-      room.canLoadConversation = false;
-      new Promise((resolve, reject) => {
-        Service.getLastConversation(room._id, lastTime)
-        .then(lastConvo => {
-          if (!lastConvo) {
-            loop = false;
-            reject(null);
-            return;
-          }
-          else {
-            lastTime = lastConvo.timestamp;
-            room.canLoadConversation = true;
-            room.addConversation(lastConvo);
-            resolve(lastConvo);
-          }
-        })
-      })
-      
-    }
-  }
+  
 
   socket.addEventListener("message", (event) => {
     messageData = JSON.parse(event.data);

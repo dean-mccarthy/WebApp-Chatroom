@@ -159,6 +159,12 @@ a:visited {
     font-weight: bold;
 }
 
+.message-list {
+    max-height: 67vh;
+    min-height: 67vh;
+    overflow-y:auto;
+}
+
 
 
 .form-field {
