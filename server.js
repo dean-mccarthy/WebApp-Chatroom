@@ -107,8 +107,8 @@ app.route('/chat/:room_id')
 	app.route('/chat/:room_id/messages')
 	.get((req, res) => {
 		const roomId = req.params.room_id;
-		const before =  req.query.before; 
-		console.log("roomId: ", roomId, " before: ", before)
+		const before =  parseInt(req.query.before, 10); 
+		//console.log("roomId: ", roomId, " before: ", before)
 
 		db.getLastConversation(roomId, before)
 			.then(conversation => {
@@ -116,7 +116,7 @@ app.route('/chat/:room_id')
 				if(conversation) {
 					res.json(conversation);
 				} else {
-					console.log(conversation)
+					//console.log(conversation)
 					res.status(404).json({ error: `conversation ${roomId}, ${before} was not found` });				}
 			})
 			.catch(err => {

@@ -103,22 +103,31 @@ Database.prototype.getLastConversation = function (room_id, before) {
 			if (!before || before == null) {
 				before = Date.now()
 			}
+			let id = room_id
+
+			try {
+				//can only cast if room_id is a hexadecimal or integer				
+				//console.log("attempting to cast room_id to ObjectID")
+				id = new ObjectId(room_id)	//TODO: fix deprecation
+			}
+			catch (error) {
+				 //console.log("cannot cast to ObjectID: ", error.message)
+				 //console.log("using string instead")
+			}
+			console.log(id, before);
 			var lastConversation;
-			var query = { room_id: room_id, timestamp: { $lt: before } }
+			var query = { room_id: id, timestamp: { $lt: before } }
 
 			db.collection('conversations').find(query).toArray()
 				.then(result => {
 					if (result.length === 0 || !result || result == undefined) {
-						console.log("results: ", result)
+						//console.log("results: ", result)
 						console.log("cannot find conversation, resolving null")
-						lastConversation = null
-					}
-					else if (result.length === 0) {
-						lastConversation = result[0]
+						lastConversation = null;
 					}
 					else {
-						console.log("all potential results: ")
-						console.log(result)
+						//console.log("all potential results: ")
+						//console.log(result)
 						result.sort((a, b) => b.timestamp - a.timestamp);
 						console.log("conversation found, resolving ", result[0])
 						lastConversation = result[0];
