@@ -297,8 +297,8 @@ var Service = { //Task 1A
       xhr.open("POST", Service.origin + "/chat");
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.onload = () => {
-        console.log("xhr response:")
-        console.log(xhr.response)
+        // console.log("xhr response:")
+        // console.log(xhr.response)
         if (xhr.status === 200) {
           resolve(JSON.parse(xhr.response));
         } else {
@@ -320,6 +320,8 @@ var Service = { //Task 1A
       xhr.onload = () => {
         if (xhr.status === 200) {
           console.log(xhr.status);
+          console.log("App.js xhr response: ")
+          console.log(JSON.parse(xhr.response))
           resolve(JSON.parse(xhr.response));
         } else {
           reject(new Error(xhr.responseText));

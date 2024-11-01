@@ -107,17 +107,17 @@ app.route('/chat/:room_id')
 	app.route('/chat/:room_id/messages')
 	.get((req, res) => {
 		const roomId = req.params.room_id;
-		const before =  req.params.before; //??
+		const before =  req.query.before; 
 		console.log("roomId: ", roomId, " before: ", before)
 
 		db.getLastConversation(roomId, before)
 			.then(conversation => {
-				console.log("in server.js")
+				// console.log("in server.js")
 				if(conversation) {
 					res.json(conversation);
 				} else {
-					res.status(404).json({error: 'conversation ${roomId}, ${before} was not found'});
-				}
+					console.log(conversation)
+					res.status(404).json({ error: `conversation ${roomId}, ${before} was not found` });				}
 			})
 			.catch(err => {
                 console.error("Error fetching conversation:", err);
@@ -134,7 +134,7 @@ function generateUniqueId(roomName) {
 broker.on('connection', (socket) => {
 	console.log('New client connected');
 	socket.on('message', (data) => {
-		console.log('Message received from a client:', data);
+		// console.log('Message received from a client:', data);
 		const messageData = JSON.parse(data);
 		const user = messageData.username;
 		console.log(messageData.username);
