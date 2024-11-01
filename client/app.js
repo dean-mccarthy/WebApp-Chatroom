@@ -238,6 +238,16 @@ class Room {
 
     }
   }
+
+  addConversation(conversation) {
+    let getMessages = conversation.messages;
+    getMessages.sort((a, b) => b.timestamp - a.timestamp);
+    this.messages = getMessages;
+
+    if (typeof this.onFetchConversation === 'function') {
+      onFetchConversation(conversation);
+    }
+  }
 }
 
 class Lobby {
@@ -412,6 +422,32 @@ function main() {
           }
         }
       });
+  }
+
+  function makeConversationLoader(room) {
+    let lastTime = Date.now();
+    let loop = true;
+
+    while (loop) {
+      room.canLoadConversation = false;
+      new Promise((resolve, reject) => {
+        Service.getLastConversation(room._id, lastTime)
+        .then(lastConvo => {
+          if (!lastConvo) {
+            loop = false;
+            reject(null);
+            return;
+          }
+          else {
+            lastTime = lastConvo.timestamp;
+            room.canLoadConversation = true;
+            room.addConversation(lastConvo);
+            resolve(lastConvo);
+          }
+        })
+      })
+      
+    }
   }
 
   socket.addEventListener("message", (event) => {
