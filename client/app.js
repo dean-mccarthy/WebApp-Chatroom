@@ -150,12 +150,10 @@ class ChatView {
 
   //helper function for infinite scroll
   scrollLoad(event) {
-    //console.log("scrollTop = ", this.chatElem.scrollTop)
     const isTop = this.chatElem.scrollTop <= 0; //Check if dist from top is 0
     const isUp = event.deltaY < 0; //Check if we scrolled up (distance from top decreased)
 
     if (isTop && isUp && this.room.canLoadConversation) {//check for all 3 conditions
-      //console.log('loading convo');
       this.room.getLastConversation.next();
 
     }
@@ -195,10 +193,34 @@ class ChatView {
     };
 
     this.room.onFetchConversation = function (conversation) {
-      console.log(this.chatElem);
-      var preHeight = this.chatElem.scrollTop; //Should be 0 most of the time
-      this.makeConvo(conversation);
-      var postHeight = this.chatElem.scrollTop;
+     
+      // var chatElemVariable = document.querySelector('div.message-list')
+      //replace after to elimiate reduendancies
+
+      //this.chatElem was undefined, replaced with document.querySelector('div.message-list')
+      var preHeight = document.querySelector('div.message-list').scrollTop; //Should be 0 most of the time
+
+      conversation.messages.forEach(message => {
+        if (message.username === profile.username) {
+          const messageItem = createDOM(`
+            <div class="message my-message">
+              <span class="message-user">${message.username}</span>
+              <span class="message-text">${message.text}</span>
+            </div>
+          `);
+          document.querySelector('div.message-list').prepend(messageItem);
+        } else {
+          const messageItem = createDOM(`
+            <div class="message">
+              <span class="message-user">${message.username}</span>
+              <span class="message-text">${message.text}</span>
+            </div>
+          `);
+          document.querySelector('div.message-list').prepend(messageItem);
+        }
+      });
+      
+      var postHeight = document.querySelector('div.message-list').scrollTop;
 
       this.chatElem += (postHeight - preHeight); // Set scroll down to the original height
     }
@@ -210,29 +232,6 @@ class ChatView {
     for (var message in this.room.messages) {
       var currMessage = this.room.messages[message];
       this.makeMessage(currMessage);
-    }
-  }
-
-  makeConvo(conversation) {
-    for (message in conversation) {
-      if (message.username == profile.username) {
-        const messageItem = createDOM(`
-          <div class="message my-message">
-            <span class="message-user">${message.username}</span>
-            <span class="message-text">${message.text}</span>
-          </div>
-        `);
-        this.chatElem.prepend(messageItem);
-      } else {
-        //console.log('making other-mess');
-        const messageItem = createDOM(`
-          <div class="message">
-            <span class="message-user">${message.username}</span>
-            <span class="message-text">${message.text}</span>
-          </div>
-        `);
-        this.chatElem.prepend(messageItem);
-      }
     }
   }
 
