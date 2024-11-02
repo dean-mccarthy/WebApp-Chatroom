@@ -200,7 +200,8 @@ class ChatView {
       //this.chatElem was undefined, replaced with document.querySelector('div.message-list')
       var preHeight = document.querySelector('div.message-list').scrollTop; //Should be 0 most of the time
 
-      conversation.messages.forEach(message => {
+      for (let i = conversation.messages.length - 1; i >= 0; i--) {
+        let message = conversation.messages[i]
         if (message.username === profile.username) {
           const messageItem = createDOM(`
             <div class="message my-message">
@@ -218,7 +219,7 @@ class ChatView {
           `);
           document.querySelector('div.message-list').prepend(messageItem);
         }
-      });
+      };
       
       var postHeight = document.querySelector('div.message-list').scrollTop;
 
