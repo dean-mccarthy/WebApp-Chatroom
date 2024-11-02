@@ -1,23 +1,26 @@
-function makeConversationLoader(room) {
-  let lastTime = Date.now();
+function* makeConversationLoader(room) {
+  let lastTime = room.startTime;
   let loop = true;
 
   while (loop) {
     room.canLoadConversation = false;
-    new Promise((resolve, reject) => {
-      Service.getLastConversation(room._id, lastTime)
+    yield new Promise((resolve, reject) => {
+      Service.getLastConversation(room.id, lastTime)
       .then(lastConvo => {
-        if (!lastConvo) {
-          loop = false;
-          reject(null);
-          return;
-        }
-        else {
+        if (lastConvo) {
           lastTime = lastConvo.timestamp;
           room.canLoadConversation = true;
           room.addConversation(lastConvo);
           resolve(lastConvo);
         }
+        else {
+          resolve(null);
+          loop = false;
+        }
+      })
+      .catch(err => {
+        reject(err);
+        loop = false;
       })
     })
     
@@ -142,6 +145,19 @@ class ChatView {
         this.sendMessage();
       }
     });
+    this.chatElem.addEventListener('wheel', (event) => this.scrollLoad(event));
+  }
+
+  //helper function for infinite scroll
+  scrollLoad(event) {
+    const isTop = this.chatElem.scrollTop <= 0; //Check if dist from top is 0
+    const isUp = event.deltaY < 0; //Check if we scrolled up (distance from top decreased)
+
+    if (isTop && isUp && this.room.canLoadConversation) {//check for all 3 conditions
+      this.room.getLastConversation.next();
+
+    }
+
   }
 
 
@@ -168,6 +184,13 @@ class ChatView {
   setRoom(room) {
     this.room = room;
     this.titleElem.innerHTML = room.name;
+    this.room.onFetchConversation = function (conversation) {
+      const preHeight = this.chatElem.scrollTop; //Should be 0 most of the time
+      this.makeConvo(conversation);
+      const postHeight = this.chatElem.scrollTop;
+
+      this.chatElem += (postHeight - preHeight); // Set scroll down to the original height
+    }
 
     this.redrawMessageList();
 
@@ -186,7 +209,28 @@ class ChatView {
     }
   }
 
-
+  makeConvo(conversation) {
+    for (message in conversation) {
+      if (message.username == profile.username) {
+        const messageItem = createDOM(`
+          <div class="message my-message">
+            <span class="message-user">${message.username}</span>
+            <span class="message-text">${message.text}</span>
+          </div>
+        `);
+        this.chatElem.prepend(messageItem);
+      } else {
+        console.log('making other-mess');
+        const messageItem = createDOM(`
+          <div class="message">
+            <span class="message-user">${message.username}</span>
+            <span class="message-text">${message.text}</span>
+          </div>
+        `);
+        this.chatElem.prepend(messageItem);
+      }
+    }
+  }
 
   makeMessage(message) {
 
@@ -245,6 +289,7 @@ class Room {
     this.messages = messages;
     this.getLastConversation = makeConversationLoader(this);
     this.canLoadConversation = true;
+    this.startTime = Date.now();
   };
 
   addMessage(username, text) {
@@ -270,10 +315,10 @@ class Room {
   addConversation(conversation) {
     let getMessages = conversation.messages;
     getMessages.sort((a, b) => b.timestamp - a.timestamp);
-    this.messages = getMessages;
+    this.messages = getMessages.concat(this.messages);
 
     if (typeof this.onFetchConversation === 'function') {
-      onFetchConversation(conversation);
+      this.onFetchConversation(conversation);
     }
   }
 }
@@ -349,7 +394,7 @@ var Service = { //Task 1A
     )
   },
 
-  getLastConversation: function (roomId, before) {
+  getLastConversation: async function (roomId, before) {
     return new Promise((resolve, reject) => {
       var xhr = new XMLHttpRequest();
       var url = Service.origin + `/chat/${roomId}/messages${before ? `?before=${before}` : ''}`;

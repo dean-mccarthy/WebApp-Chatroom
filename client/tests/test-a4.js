@@ -1033,7 +1033,7 @@ window.addEventListener('load', () => {
 							printOK('"Service.getLastConversation" was called with the previous conversation timestamp');
 						}
 
-						// return null to end the generator loop
+						// return null to end the loop
 						defer.resolve(null);
 
 						let outConversation = await iter.value;
