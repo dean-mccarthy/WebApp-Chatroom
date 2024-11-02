@@ -150,10 +150,12 @@ class ChatView {
 
   //helper function for infinite scroll
   scrollLoad(event) {
+    //console.log("scrollTop = ", this.chatElem.scrollTop)
     const isTop = this.chatElem.scrollTop <= 0; //Check if dist from top is 0
     const isUp = event.deltaY < 0; //Check if we scrolled up (distance from top decreased)
 
     if (isTop && isUp && this.room.canLoadConversation) {//check for all 3 conditions
+      //console.log('loading convo');
       this.room.getLastConversation.next();
 
     }
@@ -184,13 +186,6 @@ class ChatView {
   setRoom(room) {
     this.room = room;
     this.titleElem.innerHTML = room.name;
-    this.room.onFetchConversation = function (conversation) {
-      const preHeight = this.chatElem.scrollTop; //Should be 0 most of the time
-      this.makeConvo(conversation);
-      const postHeight = this.chatElem.scrollTop;
-
-      this.chatElem += (postHeight - preHeight); // Set scroll down to the original height
-    }
 
     this.redrawMessageList();
 
@@ -198,6 +193,15 @@ class ChatView {
     this.room.onNewMessage = (message) => {
       this.makeMessage(message)
     };
+
+    this.room.onFetchConversation = function (conversation) {
+      console.log(this.chatElem);
+      var preHeight = this.chatElem.scrollTop; //Should be 0 most of the time
+      this.makeConvo(conversation);
+      var postHeight = this.chatElem.scrollTop;
+
+      this.chatElem += (postHeight - preHeight); // Set scroll down to the original height
+    }
 
   }
 
@@ -220,7 +224,7 @@ class ChatView {
         `);
         this.chatElem.prepend(messageItem);
       } else {
-        console.log('making other-mess');
+        //console.log('making other-mess');
         const messageItem = createDOM(`
           <div class="message">
             <span class="message-user">${message.username}</span>
@@ -243,7 +247,7 @@ class ChatView {
       `);
       this.chatElem.appendChild(messageItem);
     } else {
-      console.log('making other-mess');
+      //console.log('making other-mess');
       const messageItem = createDOM(`
         <div class="message">
           <span class="message-user">${message.username}</span>
@@ -253,6 +257,8 @@ class ChatView {
       this.chatElem.appendChild(messageItem);
     }
   }
+
+  
 }
 
 
