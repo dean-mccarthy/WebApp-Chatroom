@@ -16,10 +16,10 @@ function logRequest(req, res, next){
 	next();
 }
 
-const host = 'localhost';
+const host = '127.0.0.1'; //temp change for tj computer
 const port = 3000;
 const clientApp = path.join(__dirname, 'client');
-const db = Database('mongodb://localhost:27017', 'cpen322-messenger');
+const db = Database('mongodb://127.0.0.1', 'cpen322-messenger'); //temp change for tj computer
 const messageBlockSize = 10;
 
 var messages = {}; 

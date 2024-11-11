@@ -6,24 +6,24 @@ function* makeConversationLoader(room) {
     room.canLoadConversation = false;
     yield new Promise((resolve, reject) => {
       Service.getLastConversation(room.id, lastTime)
-      .then(lastConvo => {
-        if (lastConvo) {
-          lastTime = lastConvo.timestamp;
-          room.canLoadConversation = true;
-          room.addConversation(lastConvo);
-          resolve(lastConvo);
-        }
-        else {
-          resolve(null);
+        .then(lastConvo => {
+          if (lastConvo) {
+            lastTime = lastConvo.timestamp;
+            room.canLoadConversation = true;
+            room.addConversation(lastConvo);
+            resolve(lastConvo);
+          }
+          else {
+            resolve(null);
+            loop = false;
+          }
+        })
+        .catch(err => {
+          reject(err);
           loop = false;
-        }
-      })
-      .catch(err => {
-        reject(err);
-        loop = false;
-      })
+        })
     })
-    
+
   }
 }
 
@@ -171,7 +171,7 @@ class ChatView {
       this.inputElem.value = '';
 
       //task 4d
-      const message ={
+      const message = {
         roomId: this.room.id,
         username: profile.username,
         text: text
@@ -193,7 +193,7 @@ class ChatView {
     };
 
     this.room.onFetchConversation = function (conversation) {
-     
+
       // var chatElemVariable = document.querySelector('div.message-list')
       //replace after to elimiate reduendancies
 
@@ -220,7 +220,7 @@ class ChatView {
           document.querySelector('div.message-list').prepend(messageItem);
         }
       };
-      
+
       var postHeight = document.querySelector('div.message-list').scrollTop;
 
       this.chatElem += (postHeight - preHeight); // Set scroll down to the original height
@@ -258,7 +258,7 @@ class ChatView {
     }
   }
 
-  
+
 }
 
 
@@ -503,7 +503,7 @@ function main() {
       });
   }
 
-  
+
 
   socket.addEventListener("message", (event) => {
     messageData = JSON.parse(event.data);
@@ -526,6 +526,12 @@ function main() {
     lobby: lobby,
     refreshLobby: refreshLobby,
     socket: socket,
+    testRoomId: 'room-1',
+    cookieName: 'cpen322-session',
+    testUser1: { username: 'alice', password: 'secret', saltedHash: '1htYvJoddV8mLxq3h7C26/RH2NPMeTDxHIxWn49M/G0wxqh/7Y3cM+kB1Wdjr4I=' },
+    testUser2: { username: 'bob', password: 'password', saltedHash: 'MIYB5u3dFYipaBtCYd9fyhhanQkuW4RkoRTUDLYtwd/IjQvYBgMHL+eoZi3Rzhw=' },
+    image: 'assets/everyone-icon.png',
+    webSocketServer: 'ws://localhost:8000'
   });
 }
 
