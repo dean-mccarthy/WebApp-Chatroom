@@ -6,9 +6,10 @@ const express = require('express');
 const Database = require('./Database.js');
 const ws = require('ws');
 const { WebSocketServer } = require('ws');
+const SessionManager = require('./SessionManager.js');
 
 const broker = new WebSocketServer({ port: 8000 });
-
+const sessionManager = new SessionManager
 
 
 function logRequest(req, res, next) {
@@ -199,8 +200,8 @@ cpen322.export(__filename, {
 	messages,
 	broker,
 	db,
-	messageBlockSize
-	// sessionManager,
+	messageBlockSize,
+	sessionManager
 	// isCorrectPassword
 });
 
