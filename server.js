@@ -7,11 +7,11 @@ const Database = require('./Database.js');
 const ws = require('ws');
 const { WebSocketServer } = require('ws');
 
-const broker = new WebSocketServer({port: 8000});
+const broker = new WebSocketServer({ port: 8000 });
 
 
 
-function logRequest(req, res, next){
+function logRequest(req, res, next) {
 	console.log(`${new Date()}  ${req.ip} : ${req.method} ${req.path}`);
 	next();
 }
@@ -22,7 +22,7 @@ const clientApp = path.join(__dirname, 'client');
 const db = Database('mongodb://127.0.0.1', 'cpen322-messenger'); //temp change for tj computer
 const messageBlockSize = 10;
 
-var messages = {}; 
+var messages = {};
 
 db.getRooms()
 	.then(rooms => {
@@ -49,39 +49,63 @@ app.listen(port, () => {
 });
 
 app.route('/chat')
-	.get((req,res) => {
+	.get((req, res) => {
 		db.getRooms()
 			.then(rooms => {
-			const chats = rooms.map(room => ({
-				_id: room._id,
-				name: room.name,
-				image: room.image,
-				messages: messages[room._id]
-			}));
-			res.json(chats);
-		});
+				const chats = rooms.map(room => ({
+					_id: room._id,
+					name: room.name,
+					image: room.image,
+					messages: messages[room._id]
+				}));
+				res.json(chats);
+			});
+
+	});
+
+app.route('/login')
+	.get((req, res) => {
+		console.log("***IN LOGIN:GET***")
+		//Initialize a database table to store user data.
+		db.createCollection("users", function(err, res) {
+			if (err) throw err;
+			console.log("Collection created!");
+			db.close();
+		  });
 		
 	});
 
-app.route('/chat')	
-	.post((req,res) => {
+app.route('/login')
+	.post((req, res) => {
+		console.log("***IN LOGIN:POST***")
+		console.log("req.body:")
+		console.log(req.body)
+		// const { username, password } = req.body;
+
+
+	});
+
+
+
+app.route('/chat')
+	.post((req, res) => {
 		const data = req.body
-		if(!data.name){
-			res.status(400).json({message: "Error: Room has no name", data});
+		if (!data.name) {
+			res.status(400).json({ message: "Error: Room has no name", data });
 		}
-		else{
-			
+		else {
+
 			//Check if this is necessary!
 			var genId = generateUniqueId(data.name);
 			messages[genId] = [];
-			
-			const newRoom =  {
+
+			const newRoom = {
 				_id: genId,
 				name: data.name,
 				image: data.image,
 				messages: messages[genId]
 			}
-			
+
 			db.addRoom(newRoom)
 			res.status(200).json(newRoom);
 		}
@@ -92,42 +116,43 @@ app.route('/chat/:room_id')
 		const roomId = req.params.room_id;
 		db.getRoom(roomId)
 			.then(room => {
-				if(room) {
+				if (room) {
 					res.json(room);
 				} else {
-					res.status(404).json({error: 'Room ${roomId} was not found'});
+					res.status(404).json({ error: 'Room ${roomId} was not found' });
 				}
 			})
 			.catch(err => {
-                console.error("Error fetching room:", err);
-                res.status(500).json({ error: "An error occurred while retrieving the room" });
-            });
+				console.error("Error fetching room:", err);
+				res.status(500).json({ error: "An error occurred while retrieving the room" });
+			});
 	})
 
-	app.route('/chat/:room_id/messages')
+app.route('/chat/:room_id/messages')
 	.get((req, res) => {
 		const roomId = req.params.room_id;
-		const before =  parseInt(req.query.before, 10); 
+		const before = parseInt(req.query.before, 10);
 		//console.log("roomId: ", roomId, " before: ", before)
 
 		db.getLastConversation(roomId, before)
 			.then(conversation => {
 				// console.log("in server.js")
-				if(conversation) {
+				if (conversation) {
 					res.json(conversation);
 				} else {
 					//console.log(conversation)
-					res.status(404).json({ error: `conversation ${roomId}, ${before} was not found` });				}
+					res.status(404).json({ error: `conversation ${roomId}, ${before} was not found` });
+				}
 			})
 			.catch(err => {
-                console.error("Error fetching conversation:", err);
-                res.status(500).json({ error: "An error occurred while retrieving the conversation" });
-            });
+				console.error("Error fetching conversation:", err);
+				res.status(500).json({ error: "An error occurred while retrieving the conversation" });
+			});
 	})
-	
+
 function generateUniqueId(roomName) {
 	const currTime = Date.now().toString();
-	const id = 'room-' + roomName + '-' + currTime; 
+	const id = 'room-' + roomName + '-' + currTime;
 	return id;
 }
 
@@ -145,18 +170,18 @@ broker.on('connection', (socket) => {
 			const newMessage = {
 				username: user,
 				text: text,
-			  };
+			};
 			messages[roomId].push(newMessage);
 			//a4t3pd
-			if((messages[roomId].length) >= messageBlockSize){
+			if ((messages[roomId].length) >= messageBlockSize) {
 				console.log("message size: ", messages[roomId].length)
-				db.addConversation({room_id: roomId, timestamp: Date.now(), messages: messages[roomId]})
-				.then(result => {
-					messages[roomId] = []
-					console.log(result)
-				})
-				.catch(console.log("error adding conversation in broker"))
-				
+				db.addConversation({ room_id: roomId, timestamp: Date.now(), messages: messages[roomId] })
+					.then(result => {
+						messages[roomId] = []
+						console.log(result)
+					})
+					.catch(console.log("error adding conversation in broker"))
+
 			}
 		}
 
@@ -167,17 +192,19 @@ broker.on('connection', (socket) => {
 		})
 	})
 	socket.on('close', () => {
-        console.log('A client disconnected.');
-    });
+		console.log('A client disconnected.');
+	});
 })
 
 // at the very end of server.js
-cpen322.connect('http://3.98.223.41/cpen322/test-a4-server.js');
-cpen322.export(__filename, { 
+cpen322.connect('http://3.98.223.41/cpen322/test-a5-server.js');
+cpen322.export(__filename, {
 	app,
 	messages,
 	broker,
 	db,
 	messageBlockSize
- });
+	// sessionManager,
+	// isCorrectPassword
+});
 

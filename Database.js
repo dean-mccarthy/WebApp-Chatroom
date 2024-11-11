@@ -111,8 +111,8 @@ Database.prototype.getLastConversation = function (room_id, before) {
 				id = new ObjectId(room_id)	//TODO: fix deprecation
 			}
 			catch (error) {
-				 //console.log("cannot cast to ObjectID: ", error.message)
-				 //console.log("using string instead")
+				//console.log("cannot cast to ObjectID: ", error.message)
+				//console.log("using string instead")
 			}
 			console.log(id, before);
 			var lastConversation;
@@ -170,5 +170,23 @@ Database.prototype.addConversation = function (conversation) {
 		})
 	)
 }
+
+Database.prototype.getUser = function (username) {
+    return this.connected.then(db => 
+        new Promise((resolve, reject) => { //chatgpt
+            if (username) {
+                db.collection('users').findOne({ username: username }, (err, user) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(user || null);
+                    }
+                });
+            } else {
+                reject('Username not found');
+            }
+        })
+    );
+};
 
 module.exports = Database;
