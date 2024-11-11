@@ -65,23 +65,19 @@ app.route('/chat')
 
 app.route('/login')
 	.get((req, res) => {
-		console.log("***IN LOGIN:GET***")
-		//Initialize a database table to store user data.
-		db.createCollection("users", function(err, res) {
-			if (err) throw err;
-			console.log("Collection created!");
-			db.close();
-		  });
 		
 	});
 
 app.route('/login')
 	.post((req, res) => {
+		const data = req.body //??
 		console.log("***IN LOGIN:POST***")
-		console.log("req.body:")
-		console.log(req.body)
-		// const { username, password } = req.body;
-
+		console.log(data)
+		const user = {
+			username: data.username,
+			password: data.password,
+		}
+		res.status(200).json(user); 
 
 	});
 

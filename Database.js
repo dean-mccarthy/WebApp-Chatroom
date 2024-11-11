@@ -175,15 +175,18 @@ Database.prototype.getUser = function (username) {
     return this.connected.then(db => 
         new Promise((resolve, reject) => { //chatgpt
             if (username) {
-                db.collection('users').findOne({ username: username }, (err, user) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(user || null);
-                    }
-                });
-            } else {
-                reject('Username not found');
+				console.log("in getUser")
+				console.log("please print please")
+				
+				db.collection('users').findOne({ username: username })
+				.then(user => {
+					console.log(user)
+					resolve(user)
+				})
+				.catch(err => {
+					console.log("Error in getUser")
+					reject(err)
+				})
             }
         })
     );
