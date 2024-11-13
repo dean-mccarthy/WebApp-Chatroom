@@ -7,6 +7,8 @@ const Database = require('./Database.js');
 const ws = require('ws');
 const { WebSocketServer } = require('ws');
 const SessionManager = require('./SessionManager.js');
+const { createHash } = require('crypto');
+
 
 const broker = new WebSocketServer({ port: 8000 });
 const sessionManager = new SessionManager
@@ -71,28 +73,31 @@ app.route('/login')
 
 app.route('/login')
 	.post((req, res) => {
-		console.log("req: ", req)
-		const data = req.body //??
+		//rename confusing variables
 		console.log("***IN LOGIN:POST***")
+		const data = req.body 
 		console.log(data)
 		const user = {
 			username: data.username,
 			password: data.password,
 		}
+		console.log("user: ", user)
 		//attempt to find user
 		db.getUser(user.username)
 			.then(userResult => {
 				if (userResult) {
+					console.log("userResult: ")
+					console.log(userResult)
 					console.log("user found, checking password")
-					const valid = isCorrectPassword(user.password, userResult.saltedHash)
+					const valid = isCorrectPassword(user.password, userResult.password)
 					if (valid){
 						console.log("Password is correct, create a new session")
-						createSession(200, user.username);
+						sessionManager.createSession(res, user.username); 
+						return res.status(200).json(user);
 						
 					} else {
 						console.log("incorrect password")
 						return res.redirect('/login');
-
 					}
 
 				} else {
@@ -102,10 +107,11 @@ app.route('/login')
 
 			})
 			.catch(err => {
-				res.status(500).json({ error: "An error occurred while fetching user" });
+				console.log("caught error after getUser: ", err)
+				return res.status(500).json({ error: "An error occurred while fetching user" });
 			})
 
-		res.status(200).json(user);
+
 
 	});
 
@@ -180,23 +186,27 @@ function generateUniqueId(roomName) {
 	return id;
 }
 
-function isCorrectPassword(password, saltedHash) {
+function isCorrectPassword(password, saltedHash) { //BUG: COMPUTATION INCORRECT 
 	console.log("isCorrectPassword with password: ", password, "; saltedHash: ", saltedHash);
 	//retrieve salt -> concat password and salt -> convert to base64 using SHA-256 -> compare to saltedHash
-	const salt = saltedHash.splice(0, 19) //first 20 chars are salt
-	const saltedPassword = salt.concat(password); //concat salt + password
-	const hash = crypto.createHash('sha256') //create hash
-	hash.update(saltedPassword); // Update the hash with the salted password
-	const sha256Hash = hash.digest();  // Get the raw binary hash -- CHATGPT -- why do you need to do this?
-	const base64Hash = sha256Hash.toString('base64');  // Convert binary hash to base64
+	const salt = saltedHash.toString().slice(0, 19) //first 20 chars are salt
+	const saltedPassword = password.concat(salt); //concat password and salt
+	const hashedSaltedPassword = createHash('sha256').update(saltedPassword).digest('base64');
 
-	if (saltedHash == password) {
+	const actualHash = saltedHash.slice(20,63)
+
+	console.log("\npassword: ", password, "\nsaltedHash: ", saltedHash, "\nsalt: ", salt, 
+		"\nsaltedPassword: ", saltedPassword, "\nhashSaltedPassword: ", hashedSaltedPassword,
+		"\nactualHash: ", actualHash)
+	
+	if (hashedSaltedPassword == actualHash) {
 		return true
 	} else {
 		return false
 	}
-
+		// return true
 }
+
 
 broker.on('connection', (socket) => {
 	console.log('New client connected');
@@ -246,7 +256,7 @@ cpen322.export(__filename, {
 	broker,
 	db,
 	messageBlockSize,
-	sessionManager
-	// isCorrectPassword
+	sessionManager,
+	isCorrectPassword
 });
 

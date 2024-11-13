@@ -172,24 +172,22 @@ Database.prototype.addConversation = function (conversation) {
 }
 
 Database.prototype.getUser = function (username) {
-    return this.connected.then(db => 
-        new Promise((resolve, reject) => { //chatgpt
-            if (username) {
+	return this.connected.then(db =>
+		new Promise((resolve, reject) => { //chatgpt
+			if (username) {
 				console.log("in getUser")
-				console.log("please print please")
-				
 				db.collection('users').findOne({ username: username })
-				.then(user => {
-					console.log(user)
-					resolve(user)
-				})
-				.catch(err => {
-					console.log("Error in getUser")
-					reject(err)
-				})
-            }
-        })
-    );
+					.then(user => {
+						console.log("collections query returned :", user)
+						resolve(user);
+					})
+					.catch(err => {
+						console.log("Error in getUser")
+						reject(err)
+					})
+			}
+		})
+	);
 };
 
 module.exports = Database;

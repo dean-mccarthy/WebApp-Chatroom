@@ -17,14 +17,14 @@ function SessionManager() {
         console.log("createSession")
         const token = crypto.randomBytes(64).toString('hex');
 
-        console.log("token: ", token)
+        // console.log("token: ", token)
         const sessionData = {
             username: username,
             timestamp: Date.now(),
             maxAge: Date.now() + CookieMaxAgeMs
         }
-        console.log("sessionData: ")
-        console.log(sessionData)
+        // console.log("sessionData: ")
+        // console.log(sessionData)
 
         sessions[token] = sessionData;
 
@@ -33,7 +33,7 @@ function SessionManager() {
         
         setTimeout(() => { //chatgpt
             delete sessions[token];
-            console.log("Session with token ", token, " has been deleted.");
+            // console.log("Session with token ", token, " has been deleted.");
           }, maxAge || defaultMaxAge);
     };
 
