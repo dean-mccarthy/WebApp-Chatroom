@@ -14,21 +14,26 @@ function SessionManager() {
     // might be worth thinking about why we create these functions
     // as anonymous functions (per each instance) and not as prototype methods
     this.createSession = (response, username, maxAge = CookieMaxAgeMs) => {
-        const randStringTok = crypto.randomBytes
+        console.log("createSession")
+        const token = crypto.randomBytes(64).toString('hex');
 
-        const token = {
+        console.log("token: ", token)
+        const sessionData = {
             username: username,
             timestamp: Date.now(),
             maxAge: Date.now() + CookieMaxAgeMs
         }
+        console.log("sessionData: ")
+        console.log(sessionData)
 
-        sessions[randStringTok] = token;
+        sessions[token] = sessionData;
 
         response.cookie('cpen322-session', token, { maxAge: maxAge || defaultMaxAge });
         
+        
         setTimeout(() => { //chatgpt
             delete sessions[token];
-            console.log(`Session with token ${token} has been deleted.`);
+            console.log("Session with token ", token, " has been deleted.");
           }, maxAge || defaultMaxAge);
     };
 

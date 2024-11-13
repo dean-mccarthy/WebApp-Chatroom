@@ -66,11 +66,12 @@ app.route('/chat')
 
 app.route('/login')
 	.get((req, res) => {
-		
+
 	});
 
 app.route('/login')
 	.post((req, res) => {
+		console.log("req: ", req)
 		const data = req.body //??
 		console.log("***IN LOGIN:POST***")
 		console.log(data)
@@ -78,7 +79,33 @@ app.route('/login')
 			username: data.username,
 			password: data.password,
 		}
-		res.status(200).json(user); 
+		//attempt to find user
+		db.getUser(user.username)
+			.then(userResult => {
+				if (userResult) {
+					console.log("user found, checking password")
+					const valid = isCorrectPassword(user.password, userResult.saltedHash)
+					if (valid){
+						console.log("Password is correct, create a new session")
+						createSession(200, user.username);
+						
+					} else {
+						console.log("incorrect password")
+						return res.redirect('/login');
+
+					}
+
+				} else {
+					console.log("no user found, redirecting to /login")
+					return res.redirect('/login');
+				}
+
+			})
+			.catch(err => {
+				res.status(500).json({ error: "An error occurred while fetching user" });
+			})
+
+		res.status(200).json(user);
 
 	});
 
@@ -151,6 +178,24 @@ function generateUniqueId(roomName) {
 	const currTime = Date.now().toString();
 	const id = 'room-' + roomName + '-' + currTime;
 	return id;
+}
+
+function isCorrectPassword(password, saltedHash) {
+	console.log("isCorrectPassword with password: ", password, "; saltedHash: ", saltedHash);
+	//retrieve salt -> concat password and salt -> convert to base64 using SHA-256 -> compare to saltedHash
+	const salt = saltedHash.splice(0, 19) //first 20 chars are salt
+	const saltedPassword = salt.concat(password); //concat salt + password
+	const hash = crypto.createHash('sha256') //create hash
+	hash.update(saltedPassword); // Update the hash with the salted password
+	const sha256Hash = hash.digest();  // Get the raw binary hash -- CHATGPT -- why do you need to do this?
+	const base64Hash = sha256Hash.toString('base64');  // Convert binary hash to base64
+
+	if (saltedHash == password) {
+		return true
+	} else {
+		return false
+	}
+
 }
 
 broker.on('connection', (socket) => {
