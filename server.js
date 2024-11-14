@@ -7,7 +7,7 @@ const Database = require('./Database.js');
 const ws = require('ws');
 const { WebSocketServer } = require('ws');
 const SessionManager = require('./SessionManager.js');
-const { createHash } = require('crypto');
+const crypto = require('crypto');
 
 
 const broker = new WebSocketServer({ port: 8000 });
@@ -77,11 +77,6 @@ app.route('/chat')
 				}));
 				res.json(chats);
 			});
-
-	});
-
-app.route('/login')
-	.get((req, res) => {
 
 	});
 
@@ -200,25 +195,20 @@ function generateUniqueId(roomName) {
 	return id;
 }
 
-function isCorrectPassword(password, saltedHash) { //BUG: COMPUTATION INCORRECT 
+function isCorrectPassword(password, saltedHash) {
 	console.log("isCorrectPassword with password: ", password, "; saltedHash: ", saltedHash);
 	//retrieve salt -> concat password and salt -> convert to base64 using SHA-256 -> compare to saltedHash
-	const salt = saltedHash.toString().slice(0, 19) //first 20 chars are salt
-	const saltedPassword = password.concat(salt); //concat password and salt
-	const hashedSaltedPassword = createHash('sha256').update(saltedPassword).digest('base64');
+	const salt = saltedHash.toString().slice(0, 20); //first 20 chars are salt
+	const saltedPassword = password + salt; //concat password and salt
+	const hashedSaltedPassword = crypto.createHash('SHA256').update(saltedPassword).digest('base64');
 
-	const actualHash = saltedHash.slice(20,63)
+	const actualHash = saltedHash.slice(20)
 
 	console.log("\npassword: ", password, "\nsaltedHash: ", saltedHash, "\nsalt: ", salt, 
 		"\nsaltedPassword: ", saltedPassword, "\nhashSaltedPassword: ", hashedSaltedPassword,
 		"\nactualHash: ", actualHash)
 	
-	if (hashedSaltedPassword == actualHash) {
-		return true
-	} else {
-		return false
-	}
-		// return true
+	return hashedSaltedPassword === actualHash;
 }
 
 
