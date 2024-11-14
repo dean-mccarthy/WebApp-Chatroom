@@ -42,8 +42,28 @@ function SessionManager() {
     };
 
     this.middleware = (request, response, next) => {
-        /* To be implemented */
+        const cookie = request.get('cookie')
+        
+        console.log("cookie: ", cookie)
+
+        if(request.get('cookie')){
+
+            const cookies = cookie.split(';');
+            const cookieValue = cookies[0].split('=')[1].trim();
+            console.log("cookieValue", cookieValue);
+
+            if(sessions[cookieValue]){
+                console.log("session found, standby")
+            } else {
+                next(new SessionError('Session cookie not found'));
+            }
+
+        } else {
+            next(new SessionError('Session cookie not found'));
+        }
+    
     };
+
 
     // this function is used by the test script.
     // you can use it if you want.
