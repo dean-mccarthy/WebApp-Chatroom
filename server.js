@@ -98,11 +98,10 @@ app.route('/login')
 					console.log("userResult: ")
 					console.log(userResult)
 					console.log("user found, checking password")
-					const valid = isCorrectPassword(user.password, userResult.password)
-					if (valid){
+					if (isCorrectPassword(user.password, userResult.password)){
 						console.log("Password is correct, create a new session")
 						sessionManager.createSession(res, user.username); 
-						return res.status(200).json(user);
+						return res.redirect('/');
 						
 					} else {
 						console.log("incorrect password")
