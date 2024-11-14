@@ -12,7 +12,7 @@ const { createHash } = require('crypto');
 
 const broker = new WebSocketServer({ port: 8000 });
 const sessionManager = new SessionManager
-
+const SessionError = SessionManager.Error; 
 
 function logRequest(req, res, next) {
 	console.log(`${new Date()}  ${req.ip} : ${req.method} ${req.path}`);
@@ -50,6 +50,20 @@ app.use('/', express.static(clientApp, { extensions: ['html'] }));
 app.listen(port, () => {
 	console.log(`${new Date()}  App Started. Listening on ${host}:${port}, serving ${clientApp}`);
 });
+
+
+app.use((err, req, res, next) => { //CHATGPT MY BELOVED
+	if (err instanceof SessionError) {
+	  const acceptHeader = req.get('Accept');
+  
+	  if (acceptHeader && acceptHeader.includes('application/json')) {
+		return res.status(401).json({ error: err.message });
+	  } else {
+		return res.redirect('/login');
+	  }
+	}
+	return res.status(500).json({ error: 'Something went wrong on the server.'});
+  });
 
 app.route('/chat')
 	.get((req, res) => {

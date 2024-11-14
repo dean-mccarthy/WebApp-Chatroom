@@ -62,11 +62,9 @@ function SessionManager() {
             } else {
                 next(new SessionError('Session cookie not found'));
             }
-
         } else {
             next(new SessionError('Session cookie not found'));
         }
-    
     };
 
 
