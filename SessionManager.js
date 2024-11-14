@@ -54,6 +54,11 @@ function SessionManager() {
 
             if(sessions[cookieValue]){
                 console.log("session found, standby")
+                console.log("username: ", sessions[cookieValue])
+                request.username = sessions[cookieValue].username;
+                request.session = cookieValue;
+                next();
+
             } else {
                 next(new SessionError('Session cookie not found'));
             }
