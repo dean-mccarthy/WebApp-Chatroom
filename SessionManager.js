@@ -27,6 +27,7 @@ function SessionManager() {
         // console.log(sessionData)
 
         sessions[token] = sessionData;
+        console.log("Sessions:", sessions);
 
         response.cookie('cpen322-session', token, { maxAge: maxAge || defaultMaxAge });
         
@@ -42,16 +43,16 @@ function SessionManager() {
     };
 
     this.middleware = (request, response, next) => {
-        const cookie = request.get('cookie')
+        const cookie = request.headers.cookie;
         
         console.log("cookie: ", cookie)
 
-        if(request.get('cookie')){
+        if(cookie){
 
             const cookies = cookie.split(';');
             const cookieValue = cookies[0].split('=')[1].trim();
             console.log("cookieValue", cookieValue);
-
+            console.log("Sessions:", sessions);
             if(sessions[cookieValue]){
                 console.log("session found, standby")
                 console.log("username: ", sessions[cookieValue])
@@ -63,7 +64,7 @@ function SessionManager() {
                 next(new SessionError('Session cookie not found'));
             }
         } else {
-            next(new SessionError('Session cookie not found'));
+            next(new SessionError('No cookie'));
         }
     };
 

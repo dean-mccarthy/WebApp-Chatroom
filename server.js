@@ -45,18 +45,21 @@ app.use(express.json()) 						// to parse application/json
 app.use(express.urlencoded({ extended: true })) // to parse application/x-www-form-urlencoded
 app.use(logRequest);							// logging for debug
 
+
+
 // serve static files (client-side)
-app.use('/', express.static(clientApp, { extensions: ['html'] }));
+app.use(['/app.js',],sessionManager.middleware,express.static(clientApp + '/app.js'));
+app.use(['/index','/index.html',/^\/$/i],sessionManager.middleware,express.static(clientApp + '/index.html'))
+app.use('/',express.static(clientApp, { extensions: ['html'] }));
 app.listen(port, () => {
 	console.log(`${new Date()}  App Started. Listening on ${host}:${port}, serving ${clientApp}`);
 });
 
 
 app.use((err, req, res, next) => { //CHATGPT MY BELOVED
-	if (err instanceof SessionError) {
-	  const acceptHeader = req.get('Accept');
+	if (err instanceof SessionManager.Error) {
   
-	  if (acceptHeader && acceptHeader.includes('application/json')) {
+	  if (req.headers.accept === 'application/json') {
 		return res.status(401).json({ error: err.message });
 	  } else {
 		return res.redirect('/login');
@@ -66,7 +69,7 @@ app.use((err, req, res, next) => { //CHATGPT MY BELOVED
   });
 
 app.route('/chat')
-	.get((req, res) => {
+	.get(sessionManager.middleware, (req, res) => {
 		db.getRooms()
 			.then(rooms => {
 				const chats = rooms.map(room => ({
@@ -126,7 +129,7 @@ app.route('/login')
 
 
 app.route('/chat')
-	.post((req, res) => {
+	.post(sessionManager.middleware, (req, res) => {
 		const data = req.body
 		if (!data.name) {
 			res.status(400).json({ message: "Error: Room has no name", data });
@@ -150,7 +153,7 @@ app.route('/chat')
 	})
 
 app.route('/chat/:room_id')
-	.get((req, res) => {
+	.get(sessionManager.middleware,(req, res) => {
 		const roomId = req.params.room_id;
 		db.getRoom(roomId)
 			.then(room => {
@@ -167,7 +170,7 @@ app.route('/chat/:room_id')
 	})
 
 app.route('/chat/:room_id/messages')
-	.get((req, res) => {
+	.get(sessionManager.middleware, (req, res) => {
 		const roomId = req.params.room_id;
 		const before = parseInt(req.query.before, 10);
 		//console.log("roomId: ", roomId, " before: ", before)
@@ -211,22 +214,34 @@ function isCorrectPassword(password, saltedHash) {
 }
 
 
-broker.on('connection', (socket) => {
+broker.on('connection', (socket, request) => {
+	var cookie = request.headers['cookie'];
+	if (!cookie) { // kill if no cookie
+		socket.close();
+		return;
+	}
+	const cookieValue = cookie.split('=')[1].trim();
+	let cookieUsername = sessionManager.getUsername(cookieValue);
+	if (!cookieUsername) {
+		socket.close()
+	}
+
+
 	console.log('New client connected');
-	socket.on('message', (data) => {
+	socket.on('message', async data => {
 		// console.log('Message received from a client:', data);
 		const messageData = JSON.parse(data);
-		const user = messageData.username;
-		console.log(messageData.username);
+		console.log('cookie user: ' + cookieUsername);
 		const text = messageData.text;
 		const roomId = messageData.roomId;
 
 		if (messages[roomId]) {
-			const newMessage = {
-				username: user,
+			let newMessage = {
+				username: cookieUsername,
 				text: text,
 			};
 			messages[roomId].push(newMessage);
+			console.log(newMessage);
 			//a4t3pd
 			if ((messages[roomId].length) >= messageBlockSize) {
 				console.log("message size: ", messages[roomId].length)
@@ -251,8 +266,14 @@ broker.on('connection', (socket) => {
 	});
 })
 
+app.route('/profile').get(sessionManager.middleware, function (req, res){
+	res.status(200).send({username: req.username});
+})
+
+
 // at the very end of server.js
 cpen322.connect('http://3.98.223.41/cpen322/test-a5-server.js');
+//cpen322.connect('client/tests/test-a5-server.js');
 cpen322.export(__filename, {
 	app,
 	messages,

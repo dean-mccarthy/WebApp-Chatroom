@@ -1025,7 +1025,7 @@ window.addEventListener('load', () => {
 				}));
 
 				let message = await deferred.promise;
-
+				print(message.username + ' ' + testUser.username);
 				if (!(message && message.username === testUser.username)){
 					result.comments.push(printError('broker should provide "username" based on the session, and ignore any "username" sent by the client'));
 				}
