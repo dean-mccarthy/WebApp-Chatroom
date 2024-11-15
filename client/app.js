@@ -299,6 +299,7 @@ class Room {
 
   addMessage(username, text) {
     //no type check on text, converts to string before trimming
+    text = sanitize(text);
     if (text == "" || String(text).trim().length == 0) //if text is empty or only whitespaces
       return;
     else {
@@ -554,6 +555,19 @@ function main() {
     webSocketServer: 'ws://localhost:8000',
     profile: profile
   });
+}
+
+function sanitize(text) {
+  return text.replace(/<script[^>]*>[\s\S]*?<\/script>|on\w+="[^"]*"|<img[^>]*>/gi, '') // remove script tags
+  .replace(/<script[^>]*>[\s\S]*?<\/script>|on\w+="[^"]*"|<img[^>]*>/gi, match => { //keep insides
+      const allowedTags = ['b', 'i', 'code', 'pre', 'strong', 'em']; // allow formatting tags
+      const tagName = match.match(/<\/?([a-zA-Z]+)/);
+      if (tagName && allowedTags.includes(tagName[1])) {
+          return match;  // return allowed tag
+      }
+      return '';  // strip disallowed tags
+  })
+  .replace(/on\w+="[^"]*"/g, ''); //remove handlers
 }
 
 

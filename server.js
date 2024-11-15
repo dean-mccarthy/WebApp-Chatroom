@@ -198,6 +198,11 @@ app.route('/chat/:room_id/messages')
 			});
 	})
 
+app.route('/logout').get(async function(req, res){
+		sessionManager.deleteSession(req);
+		res.redirect("/login")
+	})
+
 
 
 function generateUniqueId(roomName) {
@@ -241,7 +246,7 @@ broker.on('connection', (socket, request) => {
 		// console.log('Message received from a client:', data);
 		const messageData = JSON.parse(data);
 		console.log('cookie user: ' + cookieUsername);
-		const text = messageData.text;
+		const text = sanitize(messageData.text);
 		const roomId = messageData.roomId;
 
 		if (messages[roomId]) {
@@ -276,6 +281,18 @@ broker.on('connection', (socket, request) => {
 		console.log('A client disconnected.');
 	});
 })
+
+function sanitize(text) {
+	return text.replace(/<script[^>]*>[\s\S]*?<\/script>|on\w+="[^"]*"|<img[^>]*>/gi, '') // remove script tags
+	.replace(/<script[^>]*>[\s\S]*?<\/script>|on\w+="[^"]*"|<img[^>]*>/gi, match => { //keep insides
+		const allowedTags = ['b', 'i', 'code', 'pre', 'strong', 'em']; // allow formatting tags
+		const tagName = match.match(/<\/?([a-zA-Z]+)/);
+		if (tagName && allowedTags.includes(tagName[1])) {
+			return match;  // return allowed tag
+		}
+		return '';  // strip disallowed tags
+	});
+  }
 
 
 // at the very end of server.js

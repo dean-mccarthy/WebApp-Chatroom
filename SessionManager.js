@@ -39,7 +39,10 @@ function SessionManager() {
     };
 
     this.deleteSession = (request) => {
-        /* To be implemented */
+
+        delete sessions[request.session];
+        delete request.username;
+        delete request.session;
     };
 
     this.middleware = (request, response, next) => {
