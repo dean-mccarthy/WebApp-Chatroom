@@ -418,6 +418,23 @@ var Service = { //Task 1A
       xhr.onerror = () => reject(new Error(xhr.responseText));
       xhr.send();
     })
+  },
+
+  getProfile: async function () {
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", Service.origin + "/profile");
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          console.log(xhr.status);
+          resolve(JSON.parse(xhr.response));
+        } else {
+          reject(new Error(xhr.responseText));
+        }
+      }
+      xhr.onerror = () => reject(new Error(xhr.responseText));
+      xhr.send();
+    })
   }
 }
 
@@ -439,6 +456,9 @@ function createDOM(htmlString) {
 }
 
 function main() {
+  Service.getProfile().then ((res) => {
+    profile.username = res.username;
+  })
 
   const socket = new WebSocket("ws://localhost:8000")
 
@@ -513,6 +533,7 @@ function main() {
 
   });
 
+
   setInterval(refreshLobby, 5000);
   window.addEventListener('popstate', renderRoute);
   window.addEventListener('hashchange', renderRoute);
@@ -530,7 +551,8 @@ function main() {
     testUser1: { username: 'alice', password: 'secret', saltedHash: '1htYvJoddV8mLxq3h7C26/RH2NPMeTDxHIxWn49M/G0wxqh/7Y3cM+kB1Wdjr4I=' },
     testUser2: { username: 'bob', password: 'password', saltedHash: 'MIYB5u3dFYipaBtCYd9fyhhanQkuW4RkoRTUDLYtwd/IjQvYBgMHL+eoZi3Rzhw=' },
     image: 'assets/everyone-icon.png',
-    webSocketServer: 'ws://localhost:8000'
+    webSocketServer: 'ws://localhost:8000',
+    profile: profile
   });
 }
 

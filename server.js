@@ -45,7 +45,14 @@ app.use(express.json()) 						// to parse application/json
 app.use(express.urlencoded({ extended: true })) // to parse application/x-www-form-urlencoded
 app.use(logRequest);							// logging for debug
 
-
+app.route('/profile')
+	.get(sessionManager.middleware, (req, res) => {
+		if (req.username) {
+			res.status(200).send({username: req.username });
+		} else {
+			res.redirect('/login');
+		}
+	})
 
 // serve static files (client-side)
 app.use(['/app.js',],sessionManager.middleware,express.static(clientApp + '/app.js'));
@@ -191,6 +198,8 @@ app.route('/chat/:room_id/messages')
 			});
 	})
 
+
+
 function generateUniqueId(roomName) {
 	const currTime = Date.now().toString();
 	const id = 'room-' + roomName + '-' + currTime;
@@ -266,10 +275,6 @@ broker.on('connection', (socket, request) => {
 	socket.on('close', () => {
 		console.log('A client disconnected.');
 	});
-})
-
-app.route('/profile').get(sessionManager.middleware, function (req, res){
-	res.status(200).send({username: req.username});
 })
 
 

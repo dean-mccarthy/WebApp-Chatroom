@@ -1113,7 +1113,7 @@ window.addEventListener('load', () => {
 								print('(Client) Checking if "profile" was initialized');
 								await expressFunc('signInTestUser', sessionUser);
 								userProfile = await Service.getProfile();
-
+								print(profile.username, userProfile.username);
 								if (profile.username !== userProfile.username || profile.username !== sessionUser){
 									result.comments.push(printError('The global "profile" object should be updated after calling Service.getProfile in "main"', profile.username, userProfile.username, sessionUser));
 								}
