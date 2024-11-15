@@ -173,7 +173,6 @@ class ChatView {
       //task 4d
       const message = {
         roomId: this.room.id,
-        username: profile.username,
         text: text
       }
       this.socket.send(JSON.stringify(message));

@@ -221,7 +221,7 @@ broker.on('connection', (socket, request) => {
 		return;
 	}
 	const cookieValue = cookie.split('=')[1].trim();
-	let cookieUsername = sessionManager.getUsername(cookieValue);
+	const cookieUsername = sessionManager.getUsername(cookieValue);
 	if (!cookieUsername) {
 		socket.close()
 	}
@@ -236,7 +236,8 @@ broker.on('connection', (socket, request) => {
 		const roomId = messageData.roomId;
 
 		if (messages[roomId]) {
-			let newMessage = {
+			
+			const newMessage = {
 				username: cookieUsername,
 				text: text,
 			};
@@ -257,6 +258,7 @@ broker.on('connection', (socket, request) => {
 
 		broker.clients.forEach(client => {
 			if (client !== socket && client.readyState === ws.OPEN) { //for all other open clients
+				messageData.username = cookieUsername;
 				client.send(JSON.stringify(messageData));
 			}
 		})
