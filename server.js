@@ -1,4 +1,6 @@
 // assuming cpen322-tester.js is in the same directory as server.js
+// API: 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
+const OpenAI = require('openai');
 const cpen322 = require('./cpen322-tester.js');
 const path = require('path');
 const fs = require('fs');
@@ -8,11 +10,15 @@ const ws = require('ws');
 const { WebSocketServer } = require('ws');
 const SessionManager = require('./SessionManager.js');
 const crypto = require('crypto');
+const axios = require('axios');
 
 
 const broker = new WebSocketServer({ port: 8000 });
 const sessionManager = new SessionManager
 const SessionError = SessionManager.Error; 
+
+const openai = new OpenAI({apiKey: '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'});
+
 
 function logRequest(req, res, next) {
 	console.log(`${new Date()}  ${req.ip} : ${req.method} ${req.path}`);
@@ -65,7 +71,7 @@ app.listen(port, () => {
 
 app.use((err, req, res, next) => { //CHATGPT MY BELOVED
 	if (err instanceof SessionManager.Error) {
-  
+
 	  if (req.headers.accept === 'application/json') {
 		return res.status(401).json({ error: err.message });
 	  } else {
@@ -203,6 +209,25 @@ app.route('/logout').get(async function(req, res){
 		res.redirect("/login")
 	})
 
+async function summarize() { //Haha i got gpt to write the gpt
+
+	prompt = ""; //TODO: FIGURE OUT HOW TO GIVE IT THE WHOLE CONVERSATION PAST A CERTAIN TIMESTAMP
+	try {
+		// Make the API call to OpenAI's chat API to summarize the conversation
+		const response = await openai.chat.completions.create({
+		  model: 'gpt-4',  // Use the desired model
+		  messages: prompt,
+		});
+	
+		// Extract the summary from the response
+		const summary = response.choices[0].message.content.trim();
+		return summary;
+	  } catch (error) {
+		console.error('Error summarizing conversation:', error);
+		throw new Error('Unable to summarize the conversation');
+	  }
+}
+
 
 
 function generateUniqueId(roomName) {
@@ -293,6 +318,8 @@ function sanitize(text) {
 		return '';  // strip disallowed tags
 	});
   }
+
+
 
 
 // at the very end of server.js

@@ -1,0 +1,48 @@
+		prompt = "In 1 sentence, summarize what occurred in this chatroom, including final decisions"
+
+
+Alex: Alright, team, we need to divide up the work for this VPN project. Let’s aim to cover backend development, frontend/UI, security protocols, server infrastructure, and testing.
+
+Taylor: I’ll take backend development. I’ve worked with networking APIs before, so I’m the obvious choice for setting up the core VPN logic.
+
+Morgan: Wait, Taylor. Didn’t you struggle with backend optimization in our last project? I’m not sure you should take the lead here. Maybe I should handle it.
+
+Taylor: Struggle? That’s an exaggeration. I finished the API integration fine. Besides, you’re already obsessed with encryption stuff—stick to security protocols.
+
+Morgan: Sure, because encryption is a critical part of the backend! We can’t even start without a solid foundation there.
+
+Jamie: Guys, can we not argue already? Taylor, if you want backend, that’s fine, but Morgan should probably collaborate since encryption ties directly into the core.
+
+Taylor: Fine, we can collaborate, but don’t micromanage me, Morgan.
+
+Morgan: Only if you keep me in the loop.
+
+Riley: Okay, so backend and security are kind of settled. What about server infrastructure? I’m good with setting that up, but I’ll need help with scalability planning.
+
+Alex: That makes sense. Riley, you’re solid with servers, so no complaints there. I’ll handle the frontend/UI design since I’ve got experience with interfaces.
+
+Jamie: Hold on, Alex. You’re already juggling two other assignments outside of this project. Can you actually give the frontend enough attention?
+
+Alex: Excuse me? I’m perfectly capable of balancing everything. Maybe you should worry about your role instead of mine.
+
+Jamie: I would if we’d even defined what my role is!
+
+Taylor: Why don’t you take testing? Someone has to make sure this thing doesn’t break the moment we connect to a server.
+
+Jamie: Testing? Great, so I get to clean up everyone’s messes. Fun.
+
+Morgan: Jamie, testing is critical. If anything fails, it’s on you to catch it.
+
+Jamie: Yeah, no pressure, right?
+
+Riley: Sighs Can we focus? We’re wasting time arguing. Jamie, take testing. Taylor and Morgan can work on backend and security, Alex on frontend, and I’ll handle servers. Good?
+
+Alex: Fine.
+
+Taylor: Whatever. Just let’s get started already.
+
+Morgan: Agreed. But let’s have a check-in midweek to make sure things are on track.
+
+Jamie: Fine by me. But don’t expect miracles if the rest of you keep fighting.
+
+Riley: Deal. Now let’s get to work before this whole thing collapses.

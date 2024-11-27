@@ -51,7 +51,6 @@ function SessionManager() {
         console.log("cookie: ", cookie)
 
         if(cookie){
-
             const cookies = cookie.split(';');
             const cookieValue = cookies[0].split('=')[1].trim();
             console.log("cookieValue", cookieValue);
@@ -62,12 +61,13 @@ function SessionManager() {
                 request.username = sessions[cookieValue].username;
                 request.session = cookieValue;
                 next();
-
             } else {
-                next(new SessionError('Session cookie not found'));
+                next(new SessionError);
+                return;
             }
         } else {
-            next(new SessionError('No cookie'));
+            next(new SessionError);
+            return;
         }
     };
 

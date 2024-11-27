@@ -127,6 +127,7 @@ class ChatView {
 
 				</div>
 				<div class="page-control">
+          <button id="summary" type="button">Summarize</button>
 					<textarea type="textarea" placeholder="Type your message here"></textarea> <button type="button">Send</button>
 				</div>
 			</div>
@@ -135,11 +136,13 @@ class ChatView {
     this.chatElem = this.elem.querySelector('div.message-list');
     this.inputElem = this.elem.querySelector('textarea');
     this.buttonElem = this.elem.querySelector('button');
+    this.summElem = this.elem.getElementById('summary');
     this.socket = socket;
     console.log("this.socket in ChatView:", this.socket)
     //task 8d
     this.room = null;
     this.buttonElem.addEventListener('click', () => this.sendMessage());
+    this.summElem.addEventListener('click', () => this.summarizeConvo());
     this.inputElem.addEventListener('keyup', (event) => {
       if (event.key == 'Enter' && !event.shiftKey) {
         this.sendMessage();
@@ -160,6 +163,9 @@ class ChatView {
 
   }
 
+  summarizeConvo() { //TODO: fix and make space for summary on the DOM
+    return null;
+  }
 
   //task 8c
   sendMessage() {
