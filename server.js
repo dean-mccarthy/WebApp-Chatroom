@@ -210,8 +210,9 @@ app.route('/logout').get(async function(req, res){
 	})
 
 async function summarize() { //Haha i got gpt to write the gpt
+	console.log('Summarizing');
 
-	prompt = ""; //TODO: FIGURE OUT HOW TO GIVE IT THE WHOLE CONVERSATION PAST A CERTAIN TIMESTAMP
+	prompt = "In only one sentence, summarize what was talked about in this chatroom, including any final decisions made"; //TODO: FIGURE OUT HOW TO GIVE IT THE WHOLE CONVERSATION PAST A CERTAIN TIMESTAMP
 	try {
 		// Make the API call to OpenAI's chat API to summarize the conversation
 		const response = await openai.chat.completions.create({

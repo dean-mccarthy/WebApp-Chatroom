@@ -1,3 +1,6 @@
+const OpenAI = require('openai');
+const openai = new OpenAI({apiKey: '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'});
+
 function* makeConversationLoader(room) {
   let lastTime = room.startTime;
   let loop = true;
@@ -128,15 +131,15 @@ class ChatView {
 				</div>
 				<div class="page-control">
           <button id="summary" type="button">Summarize</button>
-					<textarea type="textarea" placeholder="Type your message here"></textarea> <button type="button">Send</button>
+					<textarea type="textarea" placeholder="Type your message here"></textarea> <button id="send" type="button">Send</button>
 				</div>
 			</div>
 			`);
     this.titleElem = this.elem.querySelector('h4.room-name');
     this.chatElem = this.elem.querySelector('div.message-list');
     this.inputElem = this.elem.querySelector('textarea');
-    this.buttonElem = this.elem.querySelector('button');
-    this.summElem = this.elem.getElementById('summary');
+    this.buttonElem = this.elem.querySelector('#send');
+    this.summElem = this.elem.querySelector('#summary');
     this.socket = socket;
     console.log("this.socket in ChatView:", this.socket)
     //task 8d
@@ -164,7 +167,41 @@ class ChatView {
   }
 
   summarizeConvo() { //TODO: fix and make space for summary on the DOM
-    return null;
+    
+    console.log('summarizing');
+    console.log(this.room.id);
+    var messages = [{ //this is for testing purposes
+      "username": "Sophia",
+      "text": "I can't believe Jason cheated on me... I broke up with him."
+    }, {
+      "username": "Emily",
+      "text": "What?! Are you okay? I'm so sorry, Soph."
+    }, {
+      "username": "Olivia",
+      "text": "That’s awful. You didn’t deserve that at all. What happened?"
+    }, {
+      "username": "Sophia",
+      "text": "I saw texts from another girl. I just couldn’t stay after that."
+    }, {
+      "username": "Emily",
+      "text": "You’re so strong for walking away. We’re here for you."
+    }, {
+      "username": "Olivia",
+      "text": "Let’s have a girls' night soon. You need some love and support. ❤️"
+    }];
+    /*let getMessages = Service.getLastConversation(this.room.id, null)
+      .then(convo => {
+        console.log(convo.messages);
+        messages = convo.messages;
+      });
+    console.log('getmess:', getMessages);*/ //We're gonna fix this whole shabang later
+    console.log('messages:', messages);
+    //getMessages.sort((a, b) => b.timestamp - a.timestamp);
+    //var messages = getMessages.concat(this.messages);
+
+    var summary = Service.summarize(messages);
+    console.log(summary);
+
   }
 
   //task 8c
@@ -442,6 +479,25 @@ var Service = { //Task 1A
       xhr.onerror = () => reject(new Error(xhr.responseText));
       xhr.send();
     })
+  },
+
+  summarize: async function (messages) {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': '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',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You are a helpful assistant that summarizes conversations.' },
+          { role: 'user', content: 'Summarize this chat in one sentence:\n' + messages.join('\n') }
+        ]
+      })
+    });
+    const data = await response.json();
+    return data.choices[0].message.content;
   }
 }
 
