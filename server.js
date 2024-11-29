@@ -1,5 +1,5 @@
 // assuming cpen322-tester.js is in the same directory as server.js
-// API: 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
+// API: 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
 const OpenAI = require('openai');
 const cpen322 = require('./cpen322-tester.js');
 const path = require('path');
@@ -11,13 +11,14 @@ const { WebSocketServer } = require('ws');
 const SessionManager = require('./SessionManager.js');
 const crypto = require('crypto');
 const axios = require('axios');
+const dotenv = require('dotenv');
 
 
 const broker = new WebSocketServer({ port: 8000 });
-const sessionManager = new SessionManager
+const sessionManager = new SessionManager;
 const SessionError = SessionManager.Error; 
 
-const openai = new OpenAI({apiKey: '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'});
+const openai = new OpenAI({apiKey: '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'});
 
 
 function logRequest(req, res, next) {
@@ -138,6 +139,24 @@ app.route('/login')
 
 
 	});
+
+
+app.route('/summary')
+	.post((req, res) => {
+		const messages = req.body;
+		if (!messages) {
+			res.status(400).json({ message: "Error: No messages"});
+		}
+		else {
+			const prompt = 'In only one sentence, summarize what was talked about in this chatroom, including any final decisions made' + messages;
+			const chatCompletion = openai.chat.completions.create({
+				messages: [{ 
+					role: 'user', 
+					content: prompt}],
+				model: 'gpt-4o-mini',
+			})
+		}
+	})
 
 
 

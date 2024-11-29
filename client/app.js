@@ -482,43 +482,29 @@ var Service = { //Task 1A
   summarize: async function (chatMessages) {
       // OpenAI API endpoint and key
   const apiUrl = 'https://api.openai.com/v1/chat/completions';
-  const apiKey = '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'; // Replace with your actual API key
+  const apiKey = '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'; // Replace with your actual API key
 
-  try {
-    // Make a POST request to OpenAI API
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a helpful assistant that summarizes chat conversations concisely.'
-          },
-          {
-            role: 'user',
-            content: `Please summarize the following chat conversation:\n\n${chatMessages}`
-          }
-        ],
-        max_tokens: 150
-      })
-    });
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/summary");
+    xhr.setRequestHeader("Content-Type", "application/json");
 
-    if (!response.ok) {
-      throw new Error(`API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const summary = data.choices[0].message.content;
-
-    console.log('Chat summary:', summary);
-  } catch(error) {
-      console.error('Error summarizing chat:', error);
+    xhr.onload = () => {
+        if (xhr.status === 200) {
+            resolve(JSON.parse(xhr.response)); // Parse and resolve the response
+        } else {
+            reject(new Error(xhr.responseText)); // Reject with an error
+        }
     };
+
+    xhr.onerror = () => reject(new Error("Network Error")); // Handle network errors
+
+    const payload = {
+        message: chatMessages
+    };
+
+    xhr.send(JSON.stringify(payload)); // Send the payload
+});
   }
 
   
