@@ -168,32 +168,14 @@ class ChatView {
     
     console.log('summarizing');
     console.log(this.room.id);
-    var messages = [{ //this is for testing purposes
-      "username": "Sophia",
-      "text": "I can't believe Jason cheated on me... I broke up with him."
-    }, {
-      "username": "Emily",
-      "text": "What?! Are you okay? I'm so sorry, Soph."
-    }, {
-      "username": "Olivia",
-      "text": "That’s awful. You didn’t deserve that at all. What happened?"
-    }, {
-      "username": "Sophia",
-      "text": "I saw texts from another girl. I just couldn’t stay after that."
-    }, {
-      "username": "Emily",
-      "text": "You’re so strong for walking away. We’re here for you."
-    }, {
-      "username": "Olivia",
-      "text": "Let’s have a girls' night soon. You need some love and support. ❤️"
-    }];
+    var messages = '[{"username": "Sophia", "text": "I can\'t believe Jason cheated on me... I broke up with him."}, {"username": "Emily", "text": "What?! Are you okay? I\'m so sorry, Soph."}, {"username": "Olivia", "text": "That’s awful. You didn’t deserve that at all. What happened?"}, {"username": "Sophia", "text": "I saw texts from another girl. I just couldn’t stay after that."}, {"username": "Emily", "text": "You’re so strong for walking away. We’re here for you."}, {"username": "Olivia", "text": "Let’s have a girls\' night soon. You need some love and support. ❤️"}]'
     /*let getMessages = Service.getLastConversation(this.room.id, null)
       .then(convo => {
         console.log(convo.messages);
         messages = convo.messages;
       });
     console.log('getmess:', getMessages);*/ //We're gonna fix this whole shabang later
-    console.log('messages:', messages);
+    //console.log('messages:', messages);
     //getMessages.sort((a, b) => b.timestamp - a.timestamp);
     //var messages = getMessages.concat(this.messages);
 
@@ -479,32 +461,28 @@ var Service = { //Task 1A
     })
   },
 
-  summarize: async function (chatMessages) {
-      // OpenAI API endpoint and key
-  const apiUrl = 'https://api.openai.com/v1/chat/completions';
-  const apiKey = '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'; // Replace with your actual API key
+  summarize: async function (chatMessages) {  
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/summary");
+      xhr.setRequestHeader("Content-Type", "application/json");
 
-  return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/summary");
-    xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onload = () => {
+          if (xhr.status === 200) {
+              resolve(JSON.parse(xhr.response)); // Parse and resolve the response
+          } else {
+              reject(new Error(xhr.responseText)); // Reject with an error
+          }
+      };
 
-    xhr.onload = () => {
-        if (xhr.status === 200) {
-            resolve(JSON.parse(xhr.response)); // Parse and resolve the response
-        } else {
-            reject(new Error(xhr.responseText)); // Reject with an error
-        }
-    };
+      xhr.onerror = () => reject(new Error("Network Error")); // Handle network errors
 
-    xhr.onerror = () => reject(new Error("Network Error")); // Handle network errors
+      const payload = {
+          message: chatMessages
+      };
 
-    const payload = {
-        message: chatMessages
-    };
-
-    xhr.send(JSON.stringify(payload)); // Send the payload
-});
+      xhr.send(JSON.stringify(payload)); // Send the payload
+    });
   }
 
   

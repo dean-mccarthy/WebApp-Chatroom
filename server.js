@@ -142,21 +142,32 @@ app.route('/login')
 
 
 app.route('/summary')
-	.post((req, res) => {
+	.post(async (req, res) => {
+		console.log('Routing summary');
 		const messages = req.body;
 		if (!messages) {
 			res.status(400).json({ message: "Error: No messages"});
 		}
 		else {
-			const prompt = 'In only one sentence, summarize what was talked about in this chatroom, including any final decisions made' + messages;
-			const chatCompletion = openai.chat.completions.create({
+			console.log('messages:', messages);
+			console.log('');
+			const prompt = 'You are a helpful assistant. In one sentence, summarize this chatlog, including any final decisions made' + JSON.stringify(messages);
+			console.log(prompt);
+			//const prompt = 'In only one sentence, summarize what was talked about in the following conversation, including any final decisions made' + messages;
+			const chatCompletion = await openai.chat.completions.create({
 				messages: [{ 
 					role: 'user', 
 					content: prompt}],
 				model: 'gpt-4o-mini',
 			})
+			const responseText = chatCompletion.choices[0].message.content;
+			console.log('Response:', responseText);
+			res.status(200).json(responseText);
 		}
-	})
+	})/*.catch(err => {
+		console.error("Error summarizing:", err);
+		res.status(500).json({ error: "An error occurred while summarizing" });
+	});*/
 
 
 
@@ -227,28 +238,6 @@ app.route('/logout').get(async function(req, res){
 		sessionManager.deleteSession(req);
 		res.redirect("/login")
 	})
-
-async function summarize() { //Haha i got gpt to write the gpt
-	console.log('Summarizing');
-
-	prompt = "In only one sentence, summarize what was talked about in this chatroom, including any final decisions made"; //TODO: FIGURE OUT HOW TO GIVE IT THE WHOLE CONVERSATION PAST A CERTAIN TIMESTAMP
-	try {
-		// Make the API call to OpenAI's chat API to summarize the conversation
-		const response = await openai.chat.completions.create({
-		  model: 'gpt-4',  // Use the desired model
-		  messages: prompt,
-		});
-	
-		// Extract the summary from the response
-		const summary = response.choices[0].message.content.trim();
-		return summary;
-	  } catch (error) {
-		console.error('Error summarizing conversation:', error);
-		throw new Error('Unable to summarize the conversation');
-	  }
-}
-
-
 
 function generateUniqueId(roomName) {
 	const currTime = Date.now().toString();
