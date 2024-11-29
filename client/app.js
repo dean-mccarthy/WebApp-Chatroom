@@ -1,5 +1,3 @@
-const OpenAI = require('openai');
-const openai = new OpenAI({apiKey: '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'});
 
 function* makeConversationLoader(room) {
   let lastTime = room.startTime;
@@ -481,24 +479,49 @@ var Service = { //Task 1A
     })
   },
 
-  summarize: async function (messages) {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  summarize: async function (chatMessages) {
+      // OpenAI API endpoint and key
+  const apiUrl = 'https://api.openai.com/v1/chat/completions';
+  const apiKey = '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'; // Replace with your actual API key
+
+  try {
+    // Make a POST request to OpenAI API
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': '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',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4',
         messages: [
-          { role: 'system', content: 'You are a helpful assistant that summarizes conversations.' },
-          { role: 'user', content: 'Summarize this chat in one sentence:\n' + messages.join('\n') }
-        ]
+          {
+            role: 'system',
+            content: 'You are a helpful assistant that summarizes chat conversations concisely.'
+          },
+          {
+            role: 'user',
+            content: `Please summarize the following chat conversation:\n\n${chatMessages}`
+          }
+        ],
+        max_tokens: 150
       })
     });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.statusText}`);
+    }
+
     const data = await response.json();
-    return data.choices[0].message.content;
+    const summary = data.choices[0].message.content;
+
+    console.log('Chat summary:', summary);
+  } catch(error) {
+      console.error('Error summarizing chat:', error);
+    };
   }
+
+  
 }
 
 // Helper Functions
