@@ -280,13 +280,14 @@ broker.on('connection', (socket, request) => {
 		// console.log('Message received from a client:', data);
 		const messageData = JSON.parse(data);
 		console.log('cookie user: ' + cookieUsername);
+		const user = messageData.username ? messageData.username : cookieUsername;
 		const text = sanitize(messageData.text);
 		const roomId = messageData.roomId;
 
 		if (messages[roomId]) {
 			
 			const newMessage = {
-				username: cookieUsername,
+				username: user,
 				text: text,
 			};
 			messages[roomId].push(newMessage);

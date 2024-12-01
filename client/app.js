@@ -179,8 +179,23 @@ class ChatView {
     //getMessages.sort((a, b) => b.timestamp - a.timestamp);
     //var messages = getMessages.concat(this.messages);
 
-    var summary = Service.summarize(messages);
-    console.log(summary);
+    Service.summarize(messages)
+      .then(summary => {
+        console.log('Summary:', summary);
+        if (summary !== '') {
+          this.room.addMessage('Summary:', summary);
+    
+          //Copied from "sendMessage"
+          const message = {
+            roomId: this.room.id,
+            username: 'Summary:',
+            text: summary
+          }
+          this.socket.send(JSON.stringify(message));
+        }
+      })
+    
+
 
   }
 
@@ -232,6 +247,14 @@ class ChatView {
             </div>
           `);
           document.querySelector('div.message-list').prepend(messageItem);
+        } else if (message.username === 'Summary:') {
+          const messageItem = createDOM(`
+            <div class="message summary-mess">
+              <span class="message-user">${message.username}</span>
+              <span class="message-text">${message.text}</span>
+            </div>
+          `);
+          document.querySelector('div.message-list').prepend(messageItem);
         } else {
           const messageItem = createDOM(`
             <div class="message">
@@ -263,6 +286,14 @@ class ChatView {
     if (message.username == profile.username) {
       const messageItem = createDOM(`
         <div class="message my-message">
+          <span class="message-user">${message.username}</span>
+          <span class="message-text">${message.text}</span>
+        </div>
+      `);
+      this.chatElem.appendChild(messageItem);
+    } else if (message.username === 'Summary:') {
+      const messageItem = createDOM(`
+        <div class="message summary-mess">
           <span class="message-user">${message.username}</span>
           <span class="message-text">${message.text}</span>
         </div>

@@ -155,6 +155,18 @@ a:visited {
     font-family: Arial, Helvetica, sans-serif;
 } 
 
+.summary-mess {
+    background-color: #D3B683; /* Light gray for summary messages */
+    padding: 15px;
+    margin: 20px auto; /* Auto margin to center horizontally */
+    border-radius: 8px;
+    text-align: center; /* Center-align text */
+    max-width: 80%; /* Limits the message width */
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for a polished look */
+}
+
+
 .message-user {
     font-weight: bold;
 }
