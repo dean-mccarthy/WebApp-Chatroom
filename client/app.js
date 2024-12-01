@@ -168,16 +168,12 @@ class ChatView {
     
     console.log('summarizing');
     console.log(this.room.id);
-    var messages = '[{"username": "Sophia", "text": "I can\'t believe Jason cheated on me... I broke up with him."}, {"username": "Emily", "text": "What?! Are you okay? I\'m so sorry, Soph."}, {"username": "Olivia", "text": "That’s awful. You didn’t deserve that at all. What happened?"}, {"username": "Sophia", "text": "I saw texts from another girl. I just couldn’t stay after that."}, {"username": "Emily", "text": "You’re so strong for walking away. We’re here for you."}, {"username": "Olivia", "text": "Let’s have a girls\' night soon. You need some love and support. ❤️"}]'
-    /*let getMessages = Service.getLastConversation(this.room.id, null)
-      .then(convo => {
-        console.log(convo.messages);
-        messages = convo.messages;
-      });
-    console.log('getmess:', getMessages);*/ //We're gonna fix this whole shabang later
-    //console.log('messages:', messages);
-    //getMessages.sort((a, b) => b.timestamp - a.timestamp);
-    //var messages = getMessages.concat(this.messages);
+    //var messages = '[{"username": "Sophia", "text": "I can\'t believe Jason cheated on me... I broke up with him."}, {"username": "Emily", "text": "What?! Are you okay? I\'m so sorry, Soph."}, {"username": "Olivia", "text": "That’s awful. You didn’t deserve that at all. What happened?"}, {"username": "Sophia", "text": "I saw texts from another girl. I just couldn’t stay after that."}, {"username": "Emily", "text": "You’re so strong for walking away. We’re here for you."}, {"username": "Olivia", "text": "Let’s have a girls\' night soon. You need some love and support. ❤️"}]'
+    this.room.getLastConversation.next();
+    this.room.getLastConversation.next();
+    this.room.getLastConversation.next();
+
+    var messages = this.room.messages;
 
     Service.summarize(messages)
       .then(summary => {

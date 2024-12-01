@@ -1,7 +1,6 @@
 // assuming cpen322-tester.js is in the same directory as server.js
 // API: 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
 const OpenAI = require('openai');
-const cpen322 = require('./cpen322-tester.js');
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -333,9 +332,9 @@ function sanitize(text) {
 
 
 // at the very end of server.js
-cpen322.connect('http://3.98.223.41/cpen322/test-a5-server.js');
+//cpen322.connect('http://3.98.223.41/cpen322/test-a5-server.js');
 //cpen322.connect('client/tests/test-a5-server.js');
-cpen322.export(__filename, {
+/*cpen322.export(__filename, {
 	app,
 	messages,
 	broker,
@@ -343,5 +342,5 @@ cpen322.export(__filename, {
 	messageBlockSize,
 	sessionManager,
 	isCorrectPassword
-});
+});*/
 
