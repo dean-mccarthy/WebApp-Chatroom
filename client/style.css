@@ -38,76 +38,63 @@ body {
     overflow: hidden;
     border: 10px solid #192654;
     background-color: #dce6ed;
+    margin-left: 10%;
+    margin-right: 10%;
+
 }
 
 /* App Menu */
 #app-menu {
     display: flex;
-    justify-content: center;
     align-items: center;
     background-color: #265086;
     color: #ffde00;
     text-shadow: 3px 3px 0px #192654, 6px 6px 0px #192654;
-    padding: 10px;
-    list-style-type: none;
-    margin: 0;
-    letter-spacing: 2px;
-    padding-left: 20px;
-    padding-right: 20px;
-    
+    margin: 0; 
+    padding-left: 0;
 }
 
 #app-menu li:hover {
-    border-radius: 10px;
+    border-radius: 12px;
     background-color: #192654;
 }
 
 .menu-item {
     width: 100%;
     text-align: center;
-    display: flex;           /* Enable Flexbox */
-    justify-content: center; /* Center items horizontally */
-    align-items: center;     /* Center items vertically */
-    text-align: center;  
-    padding: 0;
-    margin: 0;
+    display: flex;         
+    justify-content: center;
+    padding: 4px;
 }
 
 .menu-item a  {
     display: flex;
-    width: 100%;
-    text-align: center;
     font-size: 32px;
-    color: white;
     font-family: 'Pokemon Solid', sans-serif;
     letter-spacing: 12px;
-    padding: 15px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
+    padding: 8px 0;
+    margin: 8px 0;
+} 
 
 a {
     text-decoration: none;
     color: inherit;
-    padding: 4px;
-    margin-left: 16px;
-    margin-right: 16px;
 }
 
 a:visited {
     color: inherit;
 }
-
+/*
 
 #app-menu .menu-item img {
     display: flex;
     margin-left: 30px;
     margin-right:30px;
-    width: 20%;  /* Set the width of the image */
-    height: 20%; /* Set the height of the image */
+    width: 20%;  
+    height: 20%; 
     margin-top: 10px;
     margin-bottom: 0px;
-}
+} */
 
 /* Room List */
 .room-list {
