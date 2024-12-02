@@ -5,7 +5,7 @@ const __tester = {
 	exports: new Map(),
 	defaults: {
 		testRoomId: 'room-1',
-		image: 'assets/everyone-icon.png',
+		image: 'assets/grass.png',
 		webSocketServer: 'ws://localhost:8000'
 	},
 	oldAddEventListener: HTMLElement.prototype.addEventListener,

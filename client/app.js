@@ -43,16 +43,16 @@ class LobbyView {
 			<div class="content">
 				<ul class="room-list">
 					<li>
-						<a href="#/chat"><img src="assets/everyone-icon.png"/>Everyone in CPEN320</a>
+						<a href="#/chat"><img src="assets/grass.png"/>G in Grass if for Great</a>
 					</li>
 					<li>
-						<a href="#/chat"><img src="assets/bibimbap.jpg"/>SCRANNNN</a>
+						<a href="#/chat"><img src="assets/water.png"/>SCRANNNN</a>
 					</li>
 					<li>
-						<a href="#/chat"><img src="assets/minecraft.jpg"/>Fortnite Battle Royale</a>
+						<a href="#/chat"><img src="assets/fire.jpg"/>Hot Homies Only</a>
 					</li>
 					<li>
-						<a href="#/chat"><img src="assets/canucks.png"/>No wins</a>
+						<a href="#/chat"><img src="assets/normal.png"/>Normies</a>
 					</li>
 				</ul>
 				<div class="page-control">
@@ -76,7 +76,7 @@ class LobbyView {
     this.buttonElem.addEventListener('click', () => {
 
       const roomName = this.inputElem.value.trim();
-      const roomImg = "assets/everyone-icon.png" //is this redundant?
+      const roomImg = "assets/grass.png" //is this redundant?
       if (roomName !== '') {
 
         console.log("room name:", roomName);
@@ -337,7 +337,7 @@ class ProfileView {
 // Additional Classes
 
 class Room {
-  constructor(id, name, image = "assets/everyone-icon.png", messages = []) {
+  constructor(id, name, image = "assets/grass.png", messages = []) {
     this.id = id;
     this.name = name;
     this.image = image;
@@ -392,7 +392,7 @@ class Lobby {
       return null;
   }
 
-  addRoom(id, name, image = "assets/everyone-icon.png", messages = []) {
+  addRoom(id, name, image = "assets/grass.png", messages = []) {
     if (this.getRoom(id)) {
       console.log("Could not create room: Room with this ID already exists");
     }
@@ -627,7 +627,7 @@ function main() {
     cookieName: 'cpen322-session',
     testUser1: { username: 'alice', password: 'secret', saltedHash: '1htYvJoddV8mLxq3h7C26/RH2NPMeTDxHIxWn49M/G0wxqh/7Y3cM+kB1Wdjr4I=' },
     testUser2: { username: 'bob', password: 'password', saltedHash: 'MIYB5u3dFYipaBtCYd9fyhhanQkuW4RkoRTUDLYtwd/IjQvYBgMHL+eoZi3Rzhw=' },
-    image: 'assets/everyone-icon.png',
+    image: 'assets/grass.png',
     webSocketServer: 'ws://localhost:8000',
     profile: profile
   });

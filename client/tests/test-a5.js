@@ -16,7 +16,7 @@ const __tester = {
 		},
 		testRoomId: 'room-1',
 		cookieName: 'cpen322-session',
-		image: 'assets/everyone-icon.png',
+		image: 'assets/grass.png',
 		webSocketServer: 'ws://localhost:8000'
 	},
 	oldAddEventListener: HTMLElement.prototype.addEventListener,
@@ -1282,7 +1282,7 @@ window.addEventListener('load', () => {
 							delete cpen322.xssTarget;
 						});
 
-						testRoom.addMessage(testUser.username, `<img src="assets/everyone-icon.png" style="display: none;" onload="cpen322.xssTarget(new Error('Invoked code via XSS'))">`);
+						testRoom.addMessage(testUser.username, `<img src="assets/grass.png" style="display: none;" onload="cpen322.xssTarget(new Error('Invoked code via XSS'))">`);
 
 						try {
 							await attack;
@@ -1368,7 +1368,7 @@ window.addEventListener('load', () => {
 
 						testRoom.onNewMessage({
 							username: testUser.username,
-							text: `<img src="assets/everyone-icon.png" style="display: none;" onload="cpen322.xssTarget(new Error('Invoked code via XSS'))">`
+							text: `<img src="assets/grass.png" style="display: none;" onload="cpen322.xssTarget(new Error('Invoked code via XSS'))">`
 						});
 
 						try {
@@ -1476,7 +1476,7 @@ window.addEventListener('load', () => {
 
 						ws.send(JSON.stringify({
 							roomId: testRoom.id,
-							text: `<img src="assets/everyone-icon.png" style="display: none;" onload="cpen322.xssTarget(new Error('Invoked code via XSS'))">`
+							text: `<img src="assets/grass.png" style="display: none;" onload="cpen322.xssTarget(new Error('Invoked code via XSS'))">`
 						}));
 
 						try {
@@ -1575,7 +1575,7 @@ window.addEventListener('load', () => {
 						let deferred = null;
 						receiver.addEventListener('message', evt => deferred && deferred.resolve(JSON.parse(evt.data)));
 
-						let maliciousCode =`<img src="assets/everyone-icon.png" style="display: none;" onload="cpen322.xssTarget(new Error('Invoked code via XSS'))">`;
+						let maliciousCode =`<img src="assets/grass.png" style="display: none;" onload="cpen322.xssTarget(new Error('Invoked code via XSS'))">`;
 						let blockSize = await remoteFunc('getGlobalObject', 'messageBlockSize');
 						let roomMessages = await remoteFunc('getObjectByString', `messages['${testRoom.id}']`);
 						let testMessages = Array.from({ length: blockSize - roomMessages.length }, _ => ({ roomId: testRoom.id, text: maliciousCode }));

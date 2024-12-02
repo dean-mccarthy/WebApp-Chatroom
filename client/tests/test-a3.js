@@ -4,7 +4,7 @@ const __tester = {
 	timers: [],
 	exports: new Map(),
 	defaults: {
-		image: 'assets/everyone-icon.png',
+		image: 'assets/grass.png',
 		webSocketServer: 'ws://localhost:8000'
 	},
 	oldAddEventListener: HTMLElement.prototype.addEventListener,

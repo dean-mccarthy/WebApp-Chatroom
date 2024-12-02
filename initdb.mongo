@@ -6,23 +6,23 @@ imgHost = '/';
 result = db.chatrooms.insertMany([
 	{
 		_id: 'room-1',
-		name: 'Everyone in CPEN322',
-	    image: imgHost+'assets/everyone-icon.png'
+		name: 'G in Grass Stands For Great',
+	    image: imgHost+'assets/grass.png'
 	},
 	{
 		_id: 'room-2',
-		name: 'Foodies only',
-	    image: imgHost+'assets/bibimbap.jpg'
+		name: 'Wet Room',
+	    image: imgHost+'assets/water.png'
 	},
 	{
 		_id: 'room-3',
-		name: 'Gamers unite',
-	    image: imgHost+'assets/minecraft.jpg'
+		name: 'Hot Homies Only',
+	    image: imgHost+'assets/fire.jpg'
 	},
 	{
 		_id: 'room-4',
-		name: 'Canucks Fans',
-	    image: imgHost+'assets/canucks.png'
+		name: 'Normies',
+	    image: imgHost+'assets/normal.png'
 	}
 ]);
 
