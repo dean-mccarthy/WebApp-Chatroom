@@ -52,6 +52,8 @@ body {
     list-style-type: none;
     margin: 0;
     letter-spacing: 2px;
+    padding-left: 20px;
+    padding-right: 20px;
     
 }
 
@@ -79,7 +81,6 @@ body {
     color: white;
     font-family: 'Pokemon Solid', sans-serif;
     letter-spacing: 12px;
-    margin: 15px;
     padding: 15px;
     margin-top: 0px;
     margin-bottom: 0px;
@@ -104,7 +105,7 @@ a:visited {
     margin-right:30px;
     width: 20%;  /* Set the width of the image */
     height: 20%; /* Set the height of the image */
-    margin-top: 0px;
+    margin-top: 10px;
     margin-bottom: 0px;
 }
 
@@ -130,11 +131,6 @@ a:visited {
 
 
 .room-list li {
-    /* margin-right: 40px;
-    border-color: #265086;
-    border-width: 2px;
-    border-style: solid;
- */
     border-color: #b2c5d9;
     border-width: 3px;
     border-style: solid;
