@@ -1,38 +1,63 @@
-html *
-{
-    font-family: Arial, Helvetica, sans-serif !important;
+@import url('https://fonts.cdnfonts.com/css/pokemon-solid');
+
+/* Global Styles */
+html * {
+    font-family: "Gill Sans", sans-serif; 
+    font-size: 20px;
 }
+
+img {
+    color:#ffde00 ;
+    margin: 4px;
+    padding: 4px;
+}
+body {
+    background-image: url("/assets/forestBackground.webp");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Page Layout */
 #page-view {
     border-style: solid;
     border-width: thin;
     border-color: grey;
     display: flex;
     justify-content: flex-start;
-
 }
+
 #app-view {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
     flex-flow: column;
     height: 100%;
+    border-radius: 30px;
+    margin-top: 20px;
+    overflow: hidden;
+    border: 10px solid #192654;
+    background-color: #dce6ed;
 }
 
+/* App Menu */
 #app-menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #4e424c;
+    background-color: #265086;
+    color: #ffde00;
+    text-shadow: 3px 3px 0px #192654, 6px 6px 0px #192654;
     padding: 10px;
     list-style-type: none;
     margin: 0;
+    letter-spacing: 2px;
+    
 }
 
-/* Task 6 A */
-#app-menu li:hover{
+#app-menu li:hover {
     border-radius: 10px;
-    background-color: #3d3532;
-    color: #857d6b;
+    background-color: #192654;
 }
 
 .menu-item {
@@ -44,14 +69,18 @@ html *
     float: left;
     width: 100%;
     text-align: center;
-    font-size: 30px;
+    font-size: 32px;
     color: white;
+    font-family: 'Pokemon Solid', sans-serif;
+    letter-spacing: 12px;
 }
 
 a {
     text-decoration: none;
     color: inherit;
-    padding: 1px;
+    padding: 4px;
+    margin-left: 16px;
+    margin-right: 16px;
 }
 
 a:visited {
@@ -66,6 +95,13 @@ a:visited {
     margin: 0 0.125em;
 }
 
+/* Room List */
+.room-list {
+    vertical-align: middle;
+    padding: 16px;
+    margin: 16px;
+}
+
 .room-list img {
     border-radius: 50%;
     width: 50px; 
@@ -75,65 +111,71 @@ a:visited {
     margin-right: 20px;
 }
 
-/* Task 6 B */
-.room-list li:hover{
-    background-color: grey;
+.room-list li:hover {
+    background-color: #b2c5d9;
 }
-.room-list {
-    vertical-align: middle;
-}
+
 
 .room-list li {
-    margin-right: 40px;
-    border-color: grey;
+    /* margin-right: 40px;
+    border-color: #265086;
     border-width: 2px;
     border-style: solid;
-    margin-bottom: -2px;
-    margin-top: -2px;
+ */
+    border-color: #b2c5d9;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 10px;
+    margin-bottom: 2px;
+    margin-top: 2px;
 }
 
+
+/* Content and Controls */
 .content {
     justify-content: center;
     align-items: center;
     width: 100%;
 }
-.page-control { /*chatgpt*/
+
+.page-control {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #3a3837;
+    background-color: #265086;
     width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
     bottom: 0;
+}
+
+.page-control input {
+    margin: 2%;
+    padding-left: 8%;
+    margin-right: 4%;
 
 }
+.page-control input[type="text"], input[type="password"] {
+    margin-left:60px;
+    margin-right: 60px;
+    height: 100%;
+    letter-spacing: 4px;
+    padding-left: 16px;
+}
+
 .page-control button {
-    background-color: darkgray;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 5px;
-    text-align: center;
-}
-
-.page-control button:hover {
-    background-color: rgb(150, 150, 150) ;
-}
-
-.page-control input[type=text] {
-    height: 25px;
+    margin: 2%;
+    margin-left: 4%;
+    margin-right: 60px;
 }
 
 .room-name {
     margin-left: 20px;
 }
 
-.message { /* chatgpt */
-    background-color: #f0f0f0; /* Light color for other user's messages */
+/* Chat Messages */
+.message {
+    background-color: #f0f0f0;
     padding: 10px;
     margin: 10px;
     border-radius: 8px;
@@ -143,8 +185,8 @@ a:visited {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.my-message { /* chatgpt */
-    background-color: #6d82fd; /* Blue color for current user's messages */
+.my-message {
+    background-color: #8398b2;
     padding: 10px;
     margin: 10px;
     border-radius: 8px;  
@@ -153,19 +195,18 @@ a:visited {
     clear: both;
     float: right;
     font-family: Arial, Helvetica, sans-serif;
-} 
-
-.summary-mess {
-    background-color: #D3B683; /* Light gray for summary messages */
-    padding: 15px;
-    margin: 20px auto; /* Auto margin to center horizontally */
-    border-radius: 8px;
-    text-align: center; /* Center-align text */
-    max-width: 80%; /* Limits the message width */
-    font-family: Arial, Helvetica, sans-serif;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for a polished look */
 }
 
+.summary-mess {
+    background-color: #D3B683;
+    padding: 15px;
+    margin: 20px auto;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 80%;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 .message-user {
     font-weight: bold;
@@ -174,47 +215,94 @@ a:visited {
 .message-list {
     max-height: 67vh;
     min-height: 67vh;
-    overflow-y:auto;
+    overflow-y: auto;
 }
 
 
-
+.profile-form {
+    padding: 12px;
+    margin: 12px
+}
+/* Form Fields */
 .form-field {
-    border: 1px solid grey;
-    padding: 20px;
+    padding: 16px;
     margin: -1px;
 }
 
-.form-field input[type=file] {
-    margin-left: 45px;
+.form-field input[type="file"] {
+    margin-left: 47px;
 }
 
-input [type=text] {
-    resize: none;
-    padding: 10px 10px;
-    margin: 4px 0px;
+input[type="password"] {
+    border: 2px solid #192654;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+    outline: none;
+    transition: all 0.3s ease;
+    height: 40px;
+    width: 80%;
+    margin: 6px;
+    font-family: 'Pokemon Solid', sans-serif;
+    padding-left: 8px;
+    padding-right: 8px;
+    letter-spacing: 3px;
+    font-size: large;
     box-sizing: border-box;
 }
 
-textarea {
-    width: 90%;
-    margin-left: 5px;
+input[type="text"], textarea {
+    border: 2px solid #192654;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+    outline: none;
+    transition: all 0.3s ease;
+    height: 40px;
+    width: 80%;
+    margin: 6px;
+    font-family: 'Pokemon Solid', sans-serif;
+    padding-left: 8px;
+    padding-right: 8px;
+    letter-spacing: 3px;
+    font-size: large;
+    box-sizing: border-box;
 }
 
+input[type="text"]:focus, textarea:focus {
+    border-color: #3d7dca;
+    box-shadow: 0 0 5px rgba(61, 125, 202, 0.7);
+}
 
- /* resizing rules written by chat-gpt*/
+/* Input Button */
+button {
+    margin: 2px;
+    background-color: #ffcb05;
+    border: 2px solid #c7a008;
+    border-radius: 25px;
+    padding: 12px 24px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #c7a008;
+    border-color: #c7a008;
+    transform: scale(1.1);
+}
+
+/* Resizing */
 @media (min-width: 1024px) {
     #app-view {
         width: 80%;
     }
-
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
     #app-view {
         width: 90%;
     }
-
 }
 
 @media (max-width: 767px) {
@@ -223,6 +311,7 @@ textarea {
     }
 }
 
+/* Misc */
 ul {
     list-style-type: none;
 }
