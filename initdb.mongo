@@ -42,6 +42,98 @@ result = db.conversations.insertMany([
 				username: 'Charlie',
 				text: "What's up?"
 		}]
+	},
+	{
+		room_id: 'room-3',
+		timestamp: 1596233125227,
+		messages: [
+    {
+        "username": "Emily",
+        "text": "Hey, did you guys finish the assignment for Professor Miller yet?"
+    },
+    {
+        "username": "Jake",
+        "text": "Not even close. The last question is impossible. Have you?"
+    },
+    {
+        "username": "Sophia",
+        "text": "I’ve done most of it, but the last question has me stumped too. Why does he always make the last one so hard?"
+    },
+    {
+        "username": "Emily",
+        "text": "I know, right? I managed to figure out the first half of the last question, but I’m not sure about the rest."
+    },
+    {
+        "username": "Jake",
+        "text": "Wait, you got the first half? I didn’t even know where to start. Can you explain it to me?"
+    },
+    {
+        "username": "Sophia",
+        "text": "Same here! I’d love to know how you approached it."
+    },
+    {
+        "username": "Emily",
+        "text": "Sure! So I started by breaking it down into smaller pieces. The key is to use the formula we covered last week in class. Do you remember the one about optimization?"
+    },
+    {
+        "username": "Jake",
+        "text": "Oh, that formula! Yeah, I completely forgot about that. I should’ve taken better notes."
+    },
+    {
+        "username": "Sophia",
+        "text": "Jake, you always forget to take notes! I’ll send you mine after this. But Emily, how did you apply the formula? I’m still confused."
+    },
+    {
+        "username": "Emily",
+        "text": "Okay, so you take the data they give us and plug it into the formula step by step. It’s a bit tedious, but it works. Once you do that, you’ll get an intermediate result. That’s where I’m stuck because I don’t know how to interpret it."
+    },
+    {
+        "username": "Jake",
+        "text": "Ah, I see. Can we meet up and work on it together? I feel like I need someone to walk me through it."
+    },
+    {
+        "username": "Sophia",
+        "text": "I’m down for a study session. When are you both free?"
+    },
+    {
+        "username": "Emily",
+        "text": "How about 3 PM at the library?"
+    },
+    {
+        "username": "Jake",
+        "text": "3 PM works for me. But heads up, I’ll probably be late. Got a group meeting for our marketing project that might run over."
+    },
+    {
+        "username": "Sophia",
+        "text": "Jake, you’re always late. Just bring snacks if you’re going to make us wait!"
+    },
+    {
+        "username": "Jake",
+        "text": "Fine, fine. What do you guys want? Chips? Chocolate? Energy drinks?"
+    },
+    {
+        "username": "Emily",
+        "text": "Energy drinks for sure. I’m going to need all the help I can get to stay awake."
+    },
+    {
+        "username": "Sophia",
+        "text": "Same here. And maybe some chocolate too. Study fuel!"
+    },
+    {
+        "username": "Jake",
+        "text": "Got it. Snacks and drinks coming right up. I’ll see you guys at 3!"
+    },
+    {
+        "username": "Emily",
+        "text": "Perfect. Let’s ace this assignment!"
+    },
+    {
+        "username": "Sophia",
+        "text": "Definitely. See you guys later!"
+    }
+]
+
+
 	}
 ]);
 

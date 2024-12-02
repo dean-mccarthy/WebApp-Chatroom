@@ -168,19 +168,30 @@ class ChatView {
     
     console.log('summarizing');
     console.log(this.room.id);
-    var messages = '[{"username": "Sophia", "text": "I can\'t believe Jason cheated on me... I broke up with him."}, {"username": "Emily", "text": "What?! Are you okay? I\'m so sorry, Soph."}, {"username": "Olivia", "text": "That’s awful. You didn’t deserve that at all. What happened?"}, {"username": "Sophia", "text": "I saw texts from another girl. I just couldn’t stay after that."}, {"username": "Emily", "text": "You’re so strong for walking away. We’re here for you."}, {"username": "Olivia", "text": "Let’s have a girls\' night soon. You need some love and support. ❤️"}]'
-    /*let getMessages = Service.getLastConversation(this.room.id, null)
-      .then(convo => {
-        console.log(convo.messages);
-        messages = convo.messages;
-      });
-    console.log('getmess:', getMessages);*/ //We're gonna fix this whole shabang later
-    //console.log('messages:', messages);
-    //getMessages.sort((a, b) => b.timestamp - a.timestamp);
-    //var messages = getMessages.concat(this.messages);
+    //var messages = '[{"username": "Sophia", "text": "I can\'t believe Jason cheated on me... I broke up with him."}, {"username": "Emily", "text": "What?! Are you okay? I\'m so sorry, Soph."}, {"username": "Olivia", "text": "That’s awful. You didn’t deserve that at all. What happened?"}, {"username": "Sophia", "text": "I saw texts from another girl. I just couldn’t stay after that."}, {"username": "Emily", "text": "You’re so strong for walking away. We’re here for you."}, {"username": "Olivia", "text": "Let’s have a girls\' night soon. You need some love and support. ❤️"}]'
+    this.room.getLastConversation.next();
+    this.room.getLastConversation.next();
+    this.room.getLastConversation.next();
 
-    var summary = Service.summarize(messages);
-    console.log(summary);
+    var messages = this.room.messages;
+
+    Service.summarize(messages)
+      .then(summary => {
+        console.log('Summary:', summary);
+        if (summary !== '') {
+          this.room.addMessage('Summary:', summary);
+    
+          //Copied from "sendMessage"
+          const message = {
+            roomId: this.room.id,
+            username: 'Summary:',
+            text: summary
+          }
+          this.socket.send(JSON.stringify(message));
+        }
+      })
+    
+
 
   }
 
@@ -232,6 +243,14 @@ class ChatView {
             </div>
           `);
           document.querySelector('div.message-list').prepend(messageItem);
+        } else if (message.username === 'Summary:') {
+          const messageItem = createDOM(`
+            <div class="message summary-mess">
+              <span class="message-user">${message.username}</span>
+              <span class="message-text">${message.text}</span>
+            </div>
+          `);
+          document.querySelector('div.message-list').prepend(messageItem);
         } else {
           const messageItem = createDOM(`
             <div class="message">
@@ -263,6 +282,14 @@ class ChatView {
     if (message.username == profile.username) {
       const messageItem = createDOM(`
         <div class="message my-message">
+          <span class="message-user">${message.username}</span>
+          <span class="message-text">${message.text}</span>
+        </div>
+      `);
+      this.chatElem.appendChild(messageItem);
+    } else if (message.username === 'Summary:') {
+      const messageItem = createDOM(`
+        <div class="message summary-mess">
           <span class="message-user">${message.username}</span>
           <span class="message-text">${message.text}</span>
         </div>
