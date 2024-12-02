@@ -9,8 +9,6 @@ const ws = require('ws');
 const { WebSocketServer } = require('ws');
 const SessionManager = require('./SessionManager.js');
 const crypto = require('crypto');
-const axios = require('axios');
-const dotenv = require('dotenv');
 
 
 const broker = new WebSocketServer({ port: 8000 });
