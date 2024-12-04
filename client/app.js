@@ -164,7 +164,7 @@ class ChatView {
 
   }
 
-  summarizeConvo() { //TODO: fix and make space for summary on the DOM
+  summarizeConvo() { 
     
     console.log('summarizing');
     console.log(this.room.id);

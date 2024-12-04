@@ -148,7 +148,7 @@ app.route('/summary')
 		else {
 			console.log('messages:', messages);
 			console.log('');
-			const prompt = 'You are a helpful assistant. In one sentence, summarize this chatlog, including any final decisions made' + JSON.stringify(messages);
+			const prompt = 'You are a helpful assistant. In one sentence, summarize this chatlog, including any final decisions made. If there are multiple different conversations, summarize them separately.' + JSON.stringify(messages);
 			console.log(prompt);
 			//const prompt = 'In only one sentence, summarize what was talked about in the following conversation, including any final decisions made' + messages;
 			const chatCompletion = await openai.chat.completions.create({

@@ -130,6 +130,66 @@ result = db.conversations.insertMany([
     {
         "username": "Sophia",
         "text": "Definitely. See you guys later!"
+    },
+    {
+        "username": "Samantha",
+        "text": "Look, I’ve been thinking about this for a while, and I just can’t keep pretending everything’s okay when it’s not. I mean, how long have we been doing this, Eric? Almost two years now? And in all that time, I feel like I’ve been the only one putting in any effort."
+    },
+    {
+        "username": "Samantha",
+        "text": "It’s always me planning dates, me making sure we talk about things, me trying to fix problems before they blow up. Meanwhile, you just brush things off like it’s no big deal. It *is* a big deal, Eric. Relationships take work from both people, not just one."
+    },
+    {
+        "username": "Samantha",
+        "text": "Like last weekend—remember when I suggested we have a movie night? I picked the movie, made the snacks, set everything up, and you couldn’t even stay off your phone for five minutes. Five minutes! You just sat there scrolling through Instagram like I wasn’t even in the room."
+    },
+    {
+        "username": "Samantha",
+        "text": "And don’t get me started on how you never remember important dates. My birthday? You forgot last year and then blamed it on being 'too busy with work.' Valentine’s Day? You bought flowers from a gas station. I mean, come on, Eric, am I not worth a little effort?"
+    },
+    {
+        "username": "Samantha",
+        "text": "And speaking of work, I get it—you’re busy. We all are. But somehow, I still find time to check in on you, ask how your day was, and actually listen. When’s the last time you asked me about my day? Or how I’m feeling? It’s like you don’t even care anymore."
+    },
+    {
+        "username": "Samantha",
+        "text": "I mean, let’s be real here. When’s the last time you did something for me just because? Not because I asked, not because it was a holiday, but just because you wanted to make me feel special? Because I can’t remember, Eric. I can’t remember the last time you made me feel like I mattered."
+    },
+    {
+        "username": "Samantha",
+        "text": "And then there’s the way you handle arguments—or rather, the way you *don’t* handle them. You either shut down completely or make some half-hearted apology just to get me to stop talking. Do you know how exhausting that is? To feel like my concerns don’t matter enough for you to actually address them?"
+    },
+    {
+        "username": "Samantha",
+        "text": "Like that fight we had about your friends. I wasn’t saying you shouldn’t spend time with them—I was saying you should balance it better. But instead of listening to me, you acted like I was trying to control you. I’m not your enemy, Eric. I’m supposed to be your partner."
+    },
+    {
+        "username": "Samantha",
+        "text": "And honestly, I’m tired of making excuses for you. To my friends, to my family, even to myself. Every time you forget something or let me down, I tell myself, 'Oh, he’s just stressed' or 'He didn’t mean it.' But how many times can I do that before it stops being true?"
+    },
+    {
+        "username": "Samantha",
+        "text": "Because, Eric, if you really cared, you’d show it. Not with big gestures or expensive gifts—I don’t need any of that. I just need to feel like I’m a priority in your life. Like you actually want this to work as much as I do. But it doesn’t feel that way anymore."
+    },
+    {
+        "username": "Samantha",
+        "text": "And I know you’ll probably say something like, 'I’ll do better' or 'I’ll change.' But I’ve heard it all before, Eric. And nothing ever actually changes. Words are easy. Actions are hard. And you’ve shown me time and time again that you’re not willing to put in the effort."
+    },
+    {
+        "username": "Samantha",
+        "text": "Do you even realize how much I’ve compromised for you? How many things I’ve let slide just to avoid a fight? How many times I’ve put your needs ahead of my own? But when it’s the other way around, it’s like pulling teeth just to get you to meet me halfway."
+    },
+    {
+        "username": "Samantha",
+        "text": "And the thing is, I’m not angry anymore. I’m just... done. I’m done waiting for you to grow up. I’m done hoping you’ll suddenly start treating me the way I deserve to be treated. I’m done feeling like I’m the only one fighting for this relationship."
+    },
+    {
+        "username": "Samantha",
+        "text": "I care about you, Eric. I really do. But I can’t keep pouring my heart into something that feels so one-sided. It’s not fair to me, and honestly, it’s not fair to you either. You deserve someone who fits into your life the way you want, and I deserve someone who actually sees me."
+    },
+    {
+        "username": "Samantha",
+        "text": "So this is it. I’m done. I hope you find whatever it is you’re looking for, Eric. I really do. But I can’t keep losing myself in the process of trying to make this work. Goodbye."
     }
 ]
 
