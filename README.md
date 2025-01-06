@@ -1,5 +1,5 @@
 
-# CPEN 320 Assn 6 Pokemon Chat App AI 
+# Pokemon Chat App AI 
 
 For this assignment we included OpenAI's GPT-4o-Mini integration with the function of summarizing the chatlogs
 
@@ -17,5 +17,4 @@ Dependencies:
 * express
 * ws
 
-API Key is already included in the files, but for reference:
-ApiKey: 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
+API Key is now inactive. Locate and replace with your own if you attempt to use this
